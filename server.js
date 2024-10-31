@@ -14,7 +14,7 @@ const server = http.createServer( function( request,response ) {
       sendFile( response, 'index.html' )
       break
     case '/index.html':
-      sendFile( response, 'index.html' )
+      sendFile( response, 'index.html' ) //comment added here
       break
     case '/style.css':
       sendFile(response, 'style.css')
