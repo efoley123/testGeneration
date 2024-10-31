@@ -1,17 +1,13 @@
-// Import the necessary modules and mock them
+const http = require('http');
+const fs = require('fs');
 jest.mock('http');
 jest.mock('fs');
 
-const http = require('http');
-const fs = require('fs');
-
-// Assuming the server code is in a file named `server.js`
 const server = require('./server');
 
 describe('Server and sendFile function tests', () => {
   let mockResponse;
   beforeEach(() => {
-    // Setup for each test
     mockResponse = {
       end: jest.fn(),
     };
@@ -27,11 +23,10 @@ describe('Server and sendFile function tests', () => {
         callback(null, mockContent);
       });
 
-      // Mock response to assert it was called correctly
       const response = { end: jest.fn() };
       const filename = 'index.html';
 
-      require('./server').sendFile(response, filename);
+      server.sendFile(response, filename);
 
       process.nextTick(() => {
         expect(fs.readFile).toHaveBeenCalledWith(filename, expect.any(Function));
@@ -48,11 +43,28 @@ describe('Server and sendFile function tests', () => {
       const response = { end: jest.fn() };
       const filename = 'nonexistent.html';
 
-      require('./server').sendFile(response, filename);
+      server.sendFile(response, filename);
 
       process.nextTick(() => {
         expect(fs.readFile).toHaveBeenCalledWith(filename, expect.any(Function));
         expect(response.end).not.toHaveBeenCalledWith(expect.any(String), 'utf-8');
+        done();
+      });
+    });
+
+    it('should handle null data gracefully', (done) => {
+      fs.readFile.mockImplementation((filename, callback) => {
+        callback(null, null);
+      });
+
+      const response = { end: jest.fn() };
+      const filename = 'emptyfile.html';
+
+      server.sendFile(response, filename);
+
+      process.nextTick(() => {
+        expect(fs.readFile).toHaveBeenCalledWith(filename, expect.any(Function));
+        expect(response.end).toHaveBeenCalledWith('', 'utf-8');
         done();
       });
     });
@@ -66,14 +78,14 @@ describe('Server and sendFile function tests', () => {
       ['/bunnies.png', 'bunnies.png'],
     ])('should serve the file content for url %s', (url, expectedFile) => {
       const request = { url };
-      const sendFile = jest.spyOn(require('./server'), 'sendFile');
+      const sendFile = jest.spyOn(server, 'sendFile');
 
       http.createServer.mockImplementation((requestListener) => {
         requestListener(request, mockResponse);
         return { listen: jest.fn() };
       });
 
-      require('./server');
+      server.init(); // Assuming there's an init function to start the server
 
       expect(sendFile).toHaveBeenCalledWith(mockResponse, expectedFile);
     });
@@ -85,11 +97,19 @@ describe('Server and sendFile function tests', () => {
         return { listen: jest.fn() };
       });
 
-      require('./server');
+      server.init(); // Assuming there's an init function to start the server
 
       expect(mockResponse.end).toHaveBeenCalledWith('404 Error: File Not Found');
     });
+
+    it('should handle server creation failure gracefully', () => {
+      http.createServer.mockImplementation(() => {
+        throw new Error("Server creation failed");
+      });
+
+      expect(() => server.init()).toThrow("Server creation failed");
+    });
   });
 
-  // Add more tests as necessary to cover edge cases and other scenarios
+  // Additional tests for edge cases and failure scenarios
 });
