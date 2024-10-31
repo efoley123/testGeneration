@@ -1,0 +1,71 @@
+
+header {
+    font-family: "Matemasie", sans-serif;
+    font-weight: bold condensed;
+    color:#8C3BED;
+    font-size: 40px;
+}
+body {
+    font-family: Arial;
+    font-weight:300;
+    color:#523BED;
+    font-size:15px;
+    padding:10px;
+
+}
+h4 {
+color:#3055F0;
+font-family: "Nerko One", cursive;
+font-weight: 200;
+font-size:30px;
+line-height: 0.0;
+}
+button {
+    /*center the button*/
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top:0cm;
+   margin-bottom: 20;
+   color:#000000;
+   background-color: #C63BED;
+    
+   /* add your code to set top and bottom margins */
+   margin-bottom:4px;
+   margin-top:4px;
+    
+   /*add an image to your button*/
+   /**-webkit-border-image: url("blueButton.png") 14 14 14 14 stretch;*/
+   background-size: cover;
+   
+   /*set width and height for the button*/
+   width:90px;
+   height:40px;
+
+}
+img {
+    /*center*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:0cm;
+    margin-bottom: 20;
+
+}
+figcaption {
+    /*center*/
+    border: 1px dotted #8C3BED;
+    text-align: center;
+}
+
+mark {
+    color:#B78AED;
+    background-color:#dbeabc;
+}
+aside {
+    margin-top: 0cm;
+    width: 50%;
+    padding-left: 15px;
+    margin-left: 15px;
+    float: right;
+}

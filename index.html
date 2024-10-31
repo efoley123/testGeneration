@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>CS4241 Assignment 1</title>
+    <!--google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Matemasie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
+    <!--for the CSS reference-->
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <meta charset="utf-8">
+  </head>
+  <body style="background-color:#F0A2E0;">
+    <header>CS4241 Assignment 1</header>
+    <h1>Information about [Eleanor]</h1>
+
+    <aside>
+      <button onclick="animation()">Animation</button>
+      <figure>
+      <img id="Bunnies" src="bunnies.png" width="320" />
+      <figcaption>4 Bunnies</figcaption>
+      </figure>
+    </aside>
+
+    <p>
+      Likes reading, watching movies, and hanging out with friends <br>
+      Here are two book recommendations:
+      <nav>
+        <a href="https://www.amazon.com/Wings-Betrayal-Faerie-Rebel-Dust-ebook/dp/B0971YRQ8R/">Wings of Betrayal: The Faerie Rebel </a> |
+        <a href="https://www.amazon.com/Sisters-Sword-Song-Rebecca-Ross-ebook/dp/B07Y8D6PK3/ref=sr_1_1?crid=3EUCG4E7XAR84&dib=eyJ2IjoiMSJ9.LDvTeU5bBLpqFDrnhNYJly_OiZXyN7ky03NGabimvL49x0f77qMMjLENRzS3-r9O4E7UrfM11I28Q54GaiQxRbLBlE3g-WUG4BJfl3tYHlEnFAYdSRfpxpiNTbWdTS47d0rMwIIIkCb1s4YaYKo_aw6O0C4wxDOajfL7bMat8KggsJRLwscl6kBx5qzlz957spdH3CjZUs9zDWQJcIW2Bw2XmYdKeqhSN6IfoC-V12Q.KfqOxQpLgv7LgX6QbjF3xWkvRPo-rU9lMILg1fNQBW8&dib_tag=se&keywords=sisters+of+song+and+sword&qid=1724706949&s=digital-text&sprefix=sisters+of+son%2Cdigital-text%2C76&sr=1-1/">Sisters of Sword and Song</a> |
+      </nav>
+    </p>
+    <p>
+      Class of 2025
+      Major: Computer Science
+      Minors: Robotics Engineering, Chinese Studies</p>
+    
+      <h4>Previous CS classes:</h4>
+    <table>
+      <caption>
+        Table
+      </caption>
+      <thead>
+        <tr>
+        <td>1101,</td>
+        <td>2102,</td>
+        <td>2011,</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td>2022,</td>
+        <td>2223,</td>
+        <td>2303,</td>
+      </tr>
+      <tr>
+        <td>3013,</td>
+        <td>3041,</td>
+        <td>3431,</td>
+      </tr>
+      <tr>
+        <td>3516,</td>
+        <td>4233,</td>
+        <td>4341,</td>
+      </tr>
+      <tr>
+        <td>4342,</td>
+        <td>4099</td>
+      </tr>
+      </tbody>
+    </table>
+    <p> <li>4099 is a Special Topics Class, it was Ethics of AI </li>
+    </p>
+    
+    <h4>Current CS classes:</h4>
+      <p><li> 3043, 3133, 4241</li>
+    </p>
+    <p>
+      <h4>Experience with following technologies and methods: </h4>
+      <li>HTML: some</li>
+      <li>CSS: some</li>
+      <li>Java: a lot</li>
+      <li>JavaScript: some</li>
+      <li>Ruby: none</li>
+      <li>Python:some</li>
+      <li>unit testing: some</li>
+    </p>
+
+    <h4>Experience</h4>
+    <p>
+      Working experience
+    </p>
+    <ul>
+      <li>ICode</li>
+    </ul>
+
+    <footer><mark>Eleanor 2024</mark></footer>
+
+    <script>
+      
+      let angle = 90;
+      let rotated = document.getElementById("Bunnies");
+
+      function animation() {
+        if (rotated) {
+          // Rotate element by 180 degrees clockwise
+          //rotated.style.transform = "rotate("+ "180)";
+          rotated.style.transform = "rotate("+ angle.toString() +"deg)";
+          angle = (angle + 90) % 360;
+          // Rotate element by 180 degrees counterclockwise
+          //rotated.style.transform = "rotate(-180deg)";
+          console.log(angle);
+        } else {
+          console.error("Element with id 'Bunnies' not found.");
+        }
+
+      }
+    </script>
+
+    
+
+
+  </body>
+</html>
