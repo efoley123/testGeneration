@@ -1,107 +1,95 @@
-// Importing the necessary modules for the testing
+// Import the necessary modules and mock them
+jest.mock('http');
+jest.mock('fs');
+
 const http = require('http');
 const fs = require('fs');
-jest.mock('fs');
-jest.mock('http');
 
-describe('Testing the HTTP server file serving functionality', () => {
-  let server;
-  beforeAll(() => {
-    // Require the server after mocks are defined to ensure it uses the mocked dependencies
-    server = require('./server'); // Assuming the code to test is saved in a file named 'server.js'
-  });
+// Assuming the server code is in a file named `server.js`
+const server = require('./server');
 
-  afterAll(() => {
-    server.close();
+describe('Server and sendFile function tests', () => {
+  let mockResponse;
+  beforeEach(() => {
+    // Setup for each test
+    mockResponse = {
+      end: jest.fn(),
+    };
+    fs.readFile.mockClear();
+    http.createServer.mockClear();
+    mockResponse.end.mockClear();
   });
 
   describe('sendFile function', () => {
-    it('should send the content of the file when file is found', done => {
-      const fakeContent = 'Fake file content';
-      fs.readFile.mockImplementation((path, callback) => {
-        callback(null, fakeContent);
+    it('should send the file content on successful read', (done) => {
+      const mockContent = 'file content';
+      fs.readFile.mockImplementation((filename, callback) => {
+        callback(null, mockContent);
       });
 
-      const response = {
-        end: jest.fn(),
-      };
+      // Mock response to assert it was called correctly
+      const response = { end: jest.fn() };
+      const filename = 'index.html';
 
-      server.sendFile(response, 'fakefile.txt');
+      require('./server').sendFile(response, filename);
 
-      setImmediate(() => {
-        expect(response.end).toHaveBeenCalledWith(fakeContent, 'utf-8');
+      process.nextTick(() => {
+        expect(fs.readFile).toHaveBeenCalledWith(filename, expect.any(Function));
+        expect(response.end).toHaveBeenCalledWith(mockContent, 'utf-8');
         done();
       });
     });
 
-    it('should handle the error when the file is not found', done => {
-      fs.readFile.mockImplementation((path, callback) => {
-        callback(new Error('File not found'), null);
+    it('should not send any content if an error occurs', (done) => {
+      fs.readFile.mockImplementation((filename, callback) => {
+        callback(new Error('Failed to read file'), null);
       });
 
-      const response = {
-        end: jest.fn(),
-      };
+      const response = { end: jest.fn() };
+      const filename = 'nonexistent.html';
 
-      server.sendFile(response, 'nonexistentfile.txt');
+      require('./server').sendFile(response, filename);
 
-      setImmediate(() => {
-        expect(response.end).toHaveBeenCalledWith(undefined, 'utf-8'); // Adjust based on actual error handling
-        done();
-      });
-    });
-  });
-
-  describe('HTTP server request handling', () => {
-    it('should return index.html content for root path', done => {
-      const request = new http.IncomingMessage();
-      request.url = '/';
-      const response = new http.ServerResponse(request);
-      response.end = jest.fn();
-
-      http.createServer.mockImplementationOnce((requestListener) => {
-        requestListener(request, response);
-        return {
-          listen: jest.fn()
-        };
-      });
-
-      expect(response.end).not.toHaveBeenCalled();
-      done();
-    });
-
-    it('should return index.html content for "/index.html" path', done => {
-      // Similar to the above test, but with request.url = '/index.html'
-      done();
-    });
-
-    it('should return style.css content for "/style.css" path', done => {
-      // Similar test structure for '/style.css'
-      done();
-    });
-
-    it('should return bunnies.png content for "/bunnies.png" path', done => {
-      // Similar test structure for '/bunnies.png'
-      done();
-    });
-
-    it('should return 404 error for unknown paths', done => {
-      const request = new http.IncomingMessage();
-      request.url = '/unknown';
-      const response = new http.ServerResponse(request);
-      response.end = jest.fn();
-
-      http.createServer.mockImplementationOnce((requestListener) => {
-        requestListener(request, response);
-        return {
-          listen: jest.fn()
-        };
-      });
-
-      setImmediate(() => {
-        expect(response.end).toHaveBeenCalledWith('404 Error: File Not Found');
+      process.nextTick(() => {
+        expect(fs.readFile).toHaveBeenCalledWith(filename, expect.any(Function));
+        expect(response.end).not.toHaveBeenCalledWith(expect.any(String), 'utf-8');
         done();
       });
     });
   });
+
+  describe('HTTP Server request handling', () => {
+    it.each([
+      ['/', 'index.html'],
+      ['/index.html', 'index.html'],
+      ['/style.css', 'style.css'],
+      ['/bunnies.png', 'bunnies.png'],
+    ])('should serve the file content for url %s', (url, expectedFile) => {
+      const request = { url };
+      const sendFile = jest.spyOn(require('./server'), 'sendFile');
+
+      http.createServer.mockImplementation((requestListener) => {
+        requestListener(request, mockResponse);
+        return { listen: jest.fn() };
+      });
+
+      require('./server');
+
+      expect(sendFile).toHaveBeenCalledWith(mockResponse, expectedFile);
+    });
+
+    it('should return 404 for unknown URLs', () => {
+      const request = { url: '/unknown' };
+      http.createServer.mockImplementation((requestListener) => {
+        requestListener(request, mockResponse);
+        return { listen: jest.fn() };
+      });
+
+      require('./server');
+
+      expect(mockResponse.end).toHaveBeenCalledWith('404 Error: File Not Found');
+    });
+  });
+
+  // Add more tests as necessary to cover edge cases and other scenarios
 });
