@@ -65,8 +65,6 @@ class TestGenerator:
    def get_related_files(self, language: str, file_name: str) -> List[str]:
        """Identify related files based on import statements or includes."""
        related_files = []
-       gettingStructure = RepoStructure() #probably could be moved only really need to do this once and pass it in
-       structure = gettingStructure.list_files()
        
        try:
             if (language=="Python" or language =='JavaScript' or language =='TypeScript'):
@@ -106,7 +104,7 @@ class TestGenerator:
 
        except Exception as e:
             logging.error(f"Error identifying related files in {file_name}: {e}")
-       print("related FILES HERE "+ ', '.join(related_files) + "\n")
+       #print("related FILES HERE "+ ', '.join(related_files) + "\n")
        return related_files  # List
        
 
