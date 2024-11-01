@@ -99,11 +99,47 @@ class TestGenerator:
                                                 break  # Found a related file, no need to check further extensions
                                 
             elif (language=='Java'):
-                return []
+                for line in f:
+                    # Example: Detecting imports in Python and JavaScript/TypeScript
+                    if 'import ' in line:
+                        parts = line.split()
+                        ##need to add in the . now
+                        for part in parts:
+                            part = part.replace(";","")
+                            part = part.replace(".","/")
+                            potential_file = f"{path}{'.java'}"
+                            if Path(potential_file).exists():
+                                related_files.append(potential_file)
+                                break  #Not tested
             elif (language =='C++'):
-                return [] #need to code this 
+                for line in f:
+                    # Example: Detecting imports in Python and JavaScript/TypeScript
+                    if '#include ' in line:
+                        parts = line.split()
+                        ##need to add in the . now
+                        for part in parts:
+                            part = part.replace("<","")
+                            part = part.replace(">","")
+                            part = part.replace(";","")
+                            part = part.replace('""',"")
+                            potential_file = f"{path}"
+                            if Path(potential_file).exists():
+                                related_files.append(potential_file)
+                                break  #Not tested
+
+                
             elif (language =='C#'):
-                return [] #need to code this 
+                for line in f:
+                    # Example: Detecting imports in Python and JavaScript/TypeScript
+                    if 'using ' in line:
+                        parts = line.split()
+                        ##need to add in the . now
+                        for part in parts:
+                            part = part.replace(";","")
+                            potential_file = f"{path}"
+                            if Path(potential_file).exists():
+                                related_files.append(potential_file)
+                                break  #Not tested
 
        except Exception as e:
             logging.error(f"Error identifying related files in {file_name}: {e}")
