@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from requests.exceptions import RequestException
 from typing import List, Optional, Dict, Any
+import subprocess
 
 # Set up logging
 logging.basicConfig(
@@ -13,10 +14,59 @@ logging.basicConfig(
    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+class RepoStructure:
+    def __init__(self):
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        repo_path = current_path
+        max_depth = 4  # Change this value to limit depth
+        file_extensions = [
+            '.py',   # Python files
+            '.js',   # JavaScript files
+            '.java', # Java files
+            '.c',    # C files
+            '.cpp',  # C++ files
+            '.h',    # C/C++ header files
+            '.rb',   # Ruby files
+            '.go',   # Go files
+            '.md',   # Markdown files for documentation
+            '.txt',  # Text files (optional)
+            'Dockerfile', # Dockerfile for environment context
+            'requirements.txt', # Python dependencies
+            'Pipfile', # Python dependency management
+            'package.json', # JavaScript dependencies
+            # Add any other specific file names or extensions you want to include
+        ]
+    def get_repo_path():
+        try:
+            repo_path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).strip().decode('utf-8')
+            return repo_path
+        except subprocess.CalledProcessError:
+            print("Not a Git repository.")
+            return None
+
+    def list_files(startpath, max_depth, file_extensions):
+        structure = ""
+        for root, dirs, files in os.walk(startpath):
+            # Ignore the '.github' directory
+            if ('.github' in root.split(os.sep)) or  ('.git' in root.split(os.sep)) :
+                continue
+            
+            level = root.replace(startpath, '').count(os.sep)
+            if level > max_depth:  # Limit the depth
+                continue
+            indent = ' ' * 4 * level
+            structure += f'{indent}{os.path.basename(root)}/\n'
+            subindent = ' ' * 4 * (level + 1)
+            for file in files:
+                if any(file.endswith(ext) for ext in file_extensions):  # Filter by extensions
+                    structure += f'{subindent}{file}\n'
+        return structure
+
+
 class TestGenerator:
    def __init__(self):
-       self.api_key = os.getenv('OPENAI_API_KEY')
-       self.model = os.getenv('OPENAI_MODEL', 'gpt-4-turbo-preview')
+       self.api_key = os.getenv('OPENAI_API_KEY').strip()
+       self.model = os.getenv('OPENAI_MODEL', 'gpt-4-turbo-preview').strip()
        
        try:
            self.max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '2000'))
@@ -60,36 +110,100 @@ class TestGenerator:
        }
        return frameworks.get(language, 'unknown')
 
-   def create_prompt(self, file_name: str, language: str) -> Optional[str]:
-       """Create a language-specific prompt for test generation."""
+   def get_related_files(self, language: str, file_name: str) -> List[str]:
+       """Identify related files based on import statements or includes."""
+       related_files = []
        try:
-           with open(file_name, 'r') as f:
-               code_content = f.read()
+            with open(file_name, 'r') as f:
+                for line in f:
+                    # Example: Detecting imports in Python and JavaScript/TypeScript
+                    if 'import ' in line or 'from ' in line or 'require(' in line:
+                        parts = line.split()
+                        for part in parts:
+                            # Check for file extensions
+                            if part.endswith(('.py', '.js', '.ts')) and Path(part).exists():
+                                related_files.append(part)
+                            # Check for class/module names without extensions
+                            elif part.isidentifier():  # Checks if part is a valid identifier
+                                # Construct potential file names
+                                base_name = part.lower()  # Assuming file names are in lowercase
+                                print("base_name: "+ base_name+"\n")
+                                for ext in ('.py', '.js', '.ts'):
+                                    potential_file = f"{base_name}{ext}"
+                                    if Path(potential_file).exists():
+                                        related_files.append(potential_file)
+                                        break  # Found a related file, no need to check further extensions
+
        except Exception as e:
-           logging.error(f"Error reading file {file_name}: {e}")
-           return None
-
-       framework = self.get_test_framework(language)
+            logging.error(f"Error identifying related files in {file_name}: {e}")
+       print("related FILES HERE"+ ', '.join(related_files) + "\n")
+       return related_files  # List
        
-       prompt = f"""Generate comprehensive unit tests for the following {language} code using {framework}.
+    
+   def adjacent_files_relevent(self, code_content: str, language: str) -> Optional[str]:
+    if (language =='Python' or language =='JavaScript' or language =='TypeScript' or language =='Java'):
+        #does stuff
+        return "no"
+    elif (language =='C++'):
+        return "no"
+    elif (language =='C#'):
+        return "no"
 
-Requirements:
-1. Include edge cases, normal cases, and error cases
-2. Use mocking where appropriate for external dependencies
-3. Include setup and teardown if needed
-4. Add descriptive test names and docstrings
-5. Follow {framework} best practices
-6. Ensure high code coverage
-7. Test both success and failure scenarios
 
-Code to test:
+   def create_prompt(self, file_name: str, language: str) -> Optional[str]:
+        """Create a language-specific prompt for test generation."""
+        try:
+            with open(file_name, 'r') as f:
+                code_content = f.read()
+        except Exception as e:
+            logging.error(f"Error reading file {file_name}: {e}")
+            return None
 
-{code_content}
+        # Gather additional context from related files
+        related_files = self.get_related_files(language, file_name)
+        related_content = ""
+        
+        # Log related files to confirm detection
+        if related_files:
+            logging.info(f"Related files for {file_name}: {related_files}")
+        else:
+            logging.info(f"No related files found for {file_name}")
+        
+        for related_file in related_files:
+            try:
+                with open(related_file, 'r') as rf:
+                    file_content = rf.read()
+                    related_content += f"\n\n// Related file: {related_file}\n{file_content}"
+                    logging.info(f"Included content from related file: {related_file}")
+            except Exception as e:
+                logging.error(f"Error reading related file {related_file}: {e}")
 
-Generate only the test code without any explanations or notes."""
+        framework = self.get_test_framework(language)
+        
+        prompt = f"""Generate comprehensive unit tests for the following {language} code using {framework}.
 
-       logging.info(f"Created prompt for {language} using {framework}. Length: {len(prompt)} characters")
-       return prompt
+        Requirements:
+        1. Include edge cases, normal cases, and error cases
+        2. Use mocking where appropriate for external dependencies
+        3. Include setup and teardown if needed
+        4. Add descriptive test names and docstrings
+        5. Follow {framework} best practices
+        6. Ensure high code coverage
+        7. Test both success and failure scenarios
+
+        Code to test:
+
+        {code_content}
+
+        Related context:
+
+        {related_content}
+
+        Generate only the test code without any explanations or notes."""
+
+        # Log the length of the final prompt to verify related content inclusion
+        logging.info(f"Created prompt for {file_name} with length {len(prompt)} characters")
+        return prompt
 
    def call_openai_api(self, prompt: str) -> Optional[str]:
        """Call OpenAI API to generate test cases."""
@@ -199,10 +313,11 @@ Generate only the test code without any explanations or notes."""
 
                logging.info(f"Processing {file_name} ({language})")
                prompt = self.create_prompt(file_name, language)
+               print(prompt)#CODE ADDED
                
                if prompt:
                    # Generate test cases from the API
-                   test_cases = self.call_openai_api(prompt)
+                   #test_cases = self.call_openai_api(prompt) #COMMENTING OUT FOR NOW
                    
                    # Clean up quotation marks if test cases were generated
                    if test_cases:
@@ -216,6 +331,7 @@ Generate only the test code without any explanations or notes."""
 
 if __name__ == '__main__':
    try:
+       gettingStructure = RepoStructure()
        generator = TestGenerator()
        generator.run()
    except Exception as e:
