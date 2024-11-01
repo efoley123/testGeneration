@@ -66,6 +66,7 @@ class TestGenerator:
        """Identify related files based on import statements or includes."""
        related_files = []
        
+       
        try:
             if (language=="Python" or language =='JavaScript' or language =='TypeScript'):
                 with open(file_name, 'r') as f:
@@ -91,12 +92,14 @@ class TestGenerator:
                                     elif part.isidentifier():  # Checks if part is a valid identifier
                                         # Construct potential file names
                                         base_name = part.lower()  # Assuming file names are in lowercase
-                                        for ext in ('.py', '.js', '.ts'):
+                                        for ext in ('.py', '.js', '.ts','.js'):
                                             potential_file = f"{base_name}{ext}"
                                             if Path(potential_file).exists():
                                                 related_files.append(potential_file)
                                                 break  # Found a related file, no need to check further extensions
                                 
+            elif (language=='Java'):
+                return []
             elif (language =='C++'):
                 return [] #need to code this 
             elif (language =='C#'):
