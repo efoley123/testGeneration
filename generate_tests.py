@@ -14,54 +14,6 @@ logging.basicConfig(
    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-class RepoStructure:
-    def __init__(self):
-        current_path = os.path.dirname(os.path.abspath(__file__))
-        repo_path = current_path
-        max_depth = 4  # Change this value to limit depth
-        file_extensions = [
-            '.py',   # Python files
-            '.js',   # JavaScript files
-            '.java', # Java files
-            '.c',    # C files
-            '.cpp',  # C++ files
-            '.h',    # C/C++ header files
-            '.rb',   # Ruby files
-            '.go',   # Go files
-            '.md',   # Markdown files for documentation
-            '.txt',  # Text files (optional)
-            'Dockerfile', # Dockerfile for environment context
-            'requirements.txt', # Python dependencies
-            'Pipfile', # Python dependency management
-            'package.json', # JavaScript dependencies
-            # Add any other specific file names or extensions you want to include
-        ]
-    def get_repo_path():
-        try:
-            repo_path = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).strip().decode('utf-8')
-            return repo_path
-        except subprocess.CalledProcessError:
-            print("Not a Git repository.")
-            return None
-
-    def list_files(startpath, max_depth, file_extensions):
-        structure = ""
-        for root, dirs, files in os.walk(startpath):
-            # Ignore the '.github' directory
-            if ('.github' in root.split(os.sep)) or  ('.git' in root.split(os.sep)) :
-                continue
-            
-            level = root.replace(startpath, '').count(os.sep)
-            if level > max_depth:  # Limit the depth
-                continue
-            indent = ' ' * 4 * level
-            structure += f'{indent}{os.path.basename(root)}/\n'
-            subindent = ' ' * 4 * (level + 1)
-            for file in files:
-                if any(file.endswith(ext) for ext in file_extensions):  # Filter by extensions
-                    structure += f'{subindent}{file}\n'
-        return structure
-
 
 class TestGenerator:
    def __init__(self):
@@ -113,41 +65,50 @@ class TestGenerator:
    def get_related_files(self, language: str, file_name: str) -> List[str]:
        """Identify related files based on import statements or includes."""
        related_files = []
+       gettingStructure = RepoStructure() #probably could be moved only really need to do this once and pass it in
+       structure = gettingStructure.list_files()
+       
        try:
-            with open(file_name, 'r') as f:
-                for line in f:
-                    # Example: Detecting imports in Python and JavaScript/TypeScript
-                    if 'import ' in line or 'from ' in line or 'require(' in line:
-                        parts = line.split()
-                        for part in parts:
-                            # Check for file extensions
-                            if part.endswith(('.py', '.js', '.ts')) and Path(part).exists():
-                                related_files.append(part)
-                            # Check for class/module names without extensions
-                            elif part.isidentifier():  # Checks if part is a valid identifier
-                                # Construct potential file names
-                                base_name = part.lower()  # Assuming file names are in lowercase
-                                print("base_name: "+ base_name+"\n")
-                                for ext in ('.py', '.js', '.ts'):
-                                    potential_file = f"{base_name}{ext}"
-                                    if Path(potential_file).exists():
-                                        related_files.append(potential_file)
-                                        break  # Found a related file, no need to check further extensions
+            if (language=="Python" or language =='JavaScript' or language =='TypeScript'):
+                with open(file_name, 'r') as f:
+                    for line in f:
+                        # Example: Detecting imports in Python and JavaScript/TypeScript
+                        if 'import ' in line or 'from ' in line or 'require(' in line:
+                            parts = line.split()
+                            ##need to add in the . now
+                            for part in parts:
+                                # Check for file extensions
+                                if '.' in part:
+                                    path = part.replace(".","/")
+                                    for ext in ('.py', '.js', '.ts'):
+                                        potential_file = f"{path}{ext}"
+                                        if Path(potential_file).exists():
+                                            related_files.append(potential_file)
+                                            break  # 
+                                else:
+                                    if part.endswith(('.py', '.js', '.ts')) and Path(part).exists():
+                                        related_files.append(part)
+                                        
+                                        # Check for class/module names without extensions
+                                    elif part.isidentifier():  # Checks if part is a valid identifier
+                                        # Construct potential file names
+                                        base_name = part.lower()  # Assuming file names are in lowercase
+                                        for ext in ('.py', '.js', '.ts'):
+                                            potential_file = f"{base_name}{ext}"
+                                            if Path(potential_file).exists():
+                                                related_files.append(potential_file)
+                                                break  # Found a related file, no need to check further extensions
+                                
+            elif (language =='C++'):
+                return [] #need to code this 
+            elif (language =='C#'):
+                return [] #need to code this 
 
        except Exception as e:
             logging.error(f"Error identifying related files in {file_name}: {e}")
-       print("related FILES HERE"+ ', '.join(related_files) + "\n")
+       print("related FILES HERE "+ ', '.join(related_files) + "\n")
        return related_files  # List
        
-    
-   def adjacent_files_relevent(self, code_content: str, language: str) -> Optional[str]:
-    if (language =='Python' or language =='JavaScript' or language =='TypeScript' or language =='Java'):
-        #does stuff
-        return "no"
-    elif (language =='C++'):
-        return "no"
-    elif (language =='C#'):
-        return "no"
 
 
    def create_prompt(self, file_name: str, language: str) -> Optional[str]:
@@ -313,11 +274,12 @@ class TestGenerator:
 
                logging.info(f"Processing {file_name} ({language})")
                prompt = self.create_prompt(file_name, language)
-               print(prompt)#CODE ADDED
+               #print(prompt)#CODE ADDED
                
                if prompt:
                    # Generate test cases from the API
-                   #test_cases = self.call_openai_api(prompt) #COMMENTING OUT FOR NOW
+                   test_cases = self.call_openai_api(prompt)
+                   
                    
                    # Clean up quotation marks if test cases were generated
                    if test_cases:
@@ -331,7 +293,6 @@ class TestGenerator:
 
 if __name__ == '__main__':
    try:
-       gettingStructure = RepoStructure()
        generator = TestGenerator()
        generator.run()
    except Exception as e:
