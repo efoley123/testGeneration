@@ -18,13 +18,13 @@ logging.basicConfig(
 class TestGenerator:
    def __init__(self):
        self.api_key = os.getenv('OPENAI_API_KEY').strip()
-       self.model = os.getenv('OPENAI_MODEL', 'gpt-4-turbo-preview').strip()
+       self.model =  os.getenv('OPENAI_MODEL', 'gpt-4-turbo-preview').strip()
        
        try:
-           self.max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '2000'))
+           self.max_tokens = 500000#int(os.getenv('OPENAI_MAX_TOKENS', '2000'))
        except ValueError:
-           logging.error("Invalid value for OPENAI_MAX_TOKENS. Using default value: 2000")
-           self.max_tokens = 2000
+           logging.error("Invalid value for OPENAI_MAX_TOKENS. Using default value: 20000")
+           self.max_tokens = 20000
 
 
        
@@ -78,6 +78,16 @@ class TestGenerator:
                             
                             for part in parts:
                                 # Check for file extensions
+                                if len(part) > 1 and part[0]=="." and part[1] != ".":
+                                    path = part.replace(".","")
+                                    for ext in ('.py', '.js', '.ts'):
+                                        potential_file = f"{path}{ext}"
+                                        #print(potential_file + "<-- from . \n")
+                                        if Path(potential_file).exists():
+                                            related_files.append(potential_file)
+                                            break  # 
+
+
                                 if '.' in part:
                                     path = part.replace(".","/")
                                     for ext in ('.py', '.js', '.ts'):
@@ -87,6 +97,7 @@ class TestGenerator:
                                             related_files.append(potential_file)
                                             break  # 
                                 else:
+
                                     if part.endswith(('.py', '.js', '.ts')) and Path(part).exists():
                                         related_files.append(part)
                                         
@@ -148,7 +159,8 @@ class TestGenerator:
             logging.error(f"Error identifying related files in {file_name}: {e}")
        #print("language was "+ language + "\n")
        #print("related FILES HERE "+ ', '.join(related_files) + "\n")
-       return related_files  # List
+       limited_files = related_files[:1]
+       return limited_files #list
        
 
    def get_related_test_files(self, language: str, file_name: str) -> List[str]:
@@ -181,7 +193,7 @@ class TestGenerator:
                                                 #print(str(Path(potential_file).exists()) + "<-- this is saying whether it exsists and this is potential_file "+str(potential_file)+"\n")
                                                 
                                                 if (Path(file_name).exists() and (stringPotentialFile in str(file_name))):
-                                                    related_test_files.append(file)
+                                                    related_test_files.append(str(file))
                                                     break  # 
 
 
@@ -192,12 +204,12 @@ class TestGenerator:
                                             #print(potential_file + "<-- from . \n")
                                                 stringPotentialFile = str(potential_file)
                                                 if Path(file_name).exists() and (stringPotentialFile in str(file_name)):
-                                                    related_test_files.append(file)
+                                                    related_test_files.append(str(file))
                                                     break  # 
                                         else:
 
                                             if part.endswith(('.py', '.js', '.ts')) and Path(part).exists() and ((str(file_name)) in str(part)):
-                                                related_test_files.append(file)
+                                                related_test_files.append(str(file))
                                         
                                             # Check for class/module names without extensions
                                             elif part.isidentifier():  # Checks if part is a valid identifier
@@ -216,7 +228,7 @@ class TestGenerator:
         except Exception as e:
             logging.error(f"Error identifying related test files in {file_name}: {e}")
        #print("related FILES HERE "+ ', '.join(related_files) + "\n")
-        limited_test_files = related_test_files[:5]# List
+        limited_test_files = related_test_files[:1]# List
         return limited_test_files  # List
    
    
