@@ -161,7 +161,7 @@ class TestGenerator:
                 #print("this is the directory"+str(directory)+"\n")
                 #just going to look in current directory
                 test_files =  list(directory.rglob("tests.py")) + list(directory.rglob("test.py")) + list(directory.rglob("test_*.py")) + list(directory.rglob("*_test.py"))
-                print("\n related TEST FILES HERE "+ ', '.join(str(file) for file in test_files) + "\n")
+                #print("\n related TEST FILES HERE "+ ', '.join(str(file) for file in test_files) + "\n")
                 #print("print statement above\n")
                 for file in test_files:
                     with open(file, 'r') as f:
@@ -216,7 +216,8 @@ class TestGenerator:
         except Exception as e:
             logging.error(f"Error identifying related test files in {file_name}: {e}")
        #print("related FILES HERE "+ ', '.join(related_files) + "\n")
-        return related_test_files  # List
+        limited_test_files = related_test_files[:5]# List
+        return limited_test_files  # List
    
    
    def create_prompt(self, file_name: str, language: str) -> Optional[str]:
