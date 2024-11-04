@@ -160,8 +160,8 @@ class TestGenerator:
                 #need to look at the directory for python test files
                 #print("this is the directory"+str(directory)+"\n")
                 #just going to look in current directory
-                test_files = list(directory.rglob("test_*.py")) + list(directory.rglob("*_test.py")) + list(directory.rglob("test.py"))
-                #print("\n related TEST FILES HERE "+ ', '.join(str(file) for file in test_files) + "\n")
+                test_files =  list(directory.rglob("tests.py")) + list(directory.rglob("test.py")) + list(directory.rglob("test_*.py")) + list(directory.rglob("*_test.py"))
+                print("\n related TEST FILES HERE "+ ', '.join(str(file) for file in test_files) + "\n")
                 #print("print statement above\n")
                 for file in test_files:
                     with open(file, 'r') as f:
@@ -170,11 +170,48 @@ class TestGenerator:
                                 #going to now check each word in the line
                                 parts = line.split()
                                 for part in parts:
-                                    #now have each word chunk
-                                    potential_file = f"{part}{'.py'}"
-                                    if Path(potential_file).exists():
-                                        related_test_files.append(file.name)
-                                        break
+                                    for part in parts:
+                                        # Check for file extensions
+                                        if len(part) > 1 and part[0]=="." and part[1] != ".":
+                                            path = part.replace(".","")
+                                            for ext in ('.py', '.js', '.ts'):
+                                                potential_file = f"{path}{ext}"
+                                                stringPotentialFile = str(potential_file)
+                                                #print("result of "+ str(file_name) +" in "+ stringPotentialFile +"  is this "+ str(stringPotentialFile in str(file_name))+ "")
+                                                #print(str(Path(potential_file).exists()) + "<-- this is saying whether it exsists and this is potential_file "+str(potential_file)+"\n")
+                                                
+                                                if (Path(file_name).exists() and (stringPotentialFile in str(file_name))):
+                                                    related_test_files.append(file)
+                                                    break  # 
+
+
+                                        elif '.' in part:
+                                            path = part.replace(".","/")
+                                            for ext in ('.py', '.js', '.ts'):
+                                                potential_file = f"{path}{ext}"
+                                            #print(potential_file + "<-- from . \n")
+                                                stringPotentialFile = str(potential_file)
+                                                if Path(file_name).exists() and (stringPotentialFile in str(file_name)):
+                                                    related_test_files.append(file)
+                                                    break  # 
+                                        else:
+
+                                            if part.endswith(('.py', '.js', '.ts')) and Path(part).exists() and ((str(file_name)) in str(part)):
+                                                related_test_files.append(file)
+                                        
+                                            # Check for class/module names without extensions
+                                            elif part.isidentifier():  # Checks if part is a valid identifier
+                                            # Construct potential file names
+                                                base_name = part.lower()  # Assuming file names are in lowercase
+                                                for ext in ('.py', '.js', '.ts','.js'):
+                                                    potential_file = f"{base_name}{ext}"
+                                                #print(potential_file + "<-- from regular \n")
+                                                stringPotentialFile = str(potential_file)
+                                                if Path(file_name).exists() and (stringPotentialFile in str(file_name)):
+                                                    related_test_files.append(file)
+                                                    break  # Found a related file, no need to check further extensions
+                                
+
     
         except Exception as e:
             logging.error(f"Error identifying related test files in {file_name}: {e}")
@@ -360,29 +397,30 @@ class TestGenerator:
            return
 
        for file_name in changed_files:
-           try:
-               language = self.detect_language(file_name)
-               if language == 'Unknown':
-                   logging.warning(f"Unsupported file type: {file_name}")
-                   continue
+           if (file_name!="generate_tests.py"):
+            try:
+                language = self.detect_language(file_name)
+                if language == 'Unknown':
+                    logging.warning(f"Unsupported file type: {file_name}")
+                    continue
 
-               logging.info(f"Processing {file_name} ({language})")
-               prompt = self.create_prompt(file_name, language)
-               print(prompt)#CODE ADDED
-               
-               if prompt:
-                   # Generate test cases from the API
-                   test_cases = self.call_openai_api(prompt)
-                   
-                   
-                   # Clean up quotation marks if test cases were generated
-                   if test_cases:
-                       test_cases = test_cases.replace("“", '"').replace("”", '"')
-                       self.save_test_cases(file_name, test_cases, language)
-                   else:
-                       logging.error(f"Failed to generate test cases for {file_name}")
-           except Exception as e:
-               logging.error(f"Error processing {file_name}: {e}")
+                logging.info(f"Processing {file_name} ({language})")
+                prompt = self.create_prompt(file_name, language)
+                print(prompt)#CODE ADDED
+                
+                if prompt:
+                    # Generate test cases from the API
+                    test_cases = self.call_openai_api(prompt)
+                    
+                    
+                    # Clean up quotation marks if test cases were generated
+                    if test_cases:
+                        test_cases = test_cases.replace("“", '"').replace("”", '"')
+                        self.save_test_cases(file_name, test_cases, language)
+                    else:
+                        logging.error(f"Failed to generate test cases for {file_name}")
+            except Exception as e:
+                logging.error(f"Error processing {file_name}: {e}")
 
 
 if __name__ == '__main__':
