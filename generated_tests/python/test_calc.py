@@ -1,69 +1,59 @@
 import pytest
-from unittest.mock import patch
-from calculator import main  # Assuming the given code is saved in calculator.py
+from unittest import mock
 
-# Helper function to simulate input for main()
-def mock_inputs(inputs):
-    return patch('builtins.input', side_effect=inputs)
+# Assuming the script is named calculator.py and the function is accessible
+from calculator import main
 
-# Helper function to simulate print
+@pytest.fixture
+def mock_inputs():
+    """Fixture to mock input values."""
+    with mock.patch('builtins.input', side_effect=['3', '2']) as _mock:
+        yield _mock
+
+@pytest.fixture
+def mock_inputs_division_by_zero():
+    """Fixture to mock input values for division by zero case."""
+    with mock.patch('builtins.input', side_effect=['4', '0']) as _mock:
+        yield _mock
+
+@pytest.fixture
 def mock_print():
-    return patch('builtins.print')
+    """Fixture to mock print function."""
+    with mock.patch('builtins.print') as _mock:
+        yield _mock
 
-@pytest.mark.parametrize("input_values, expected_output", [
-    (("2", "3"), ["The sum is: 5.0", "The difference is: -1.0", "The product is: 6.0", "The quotient is: 0.6666666666666666"]),
-    (("5", "0"), ["The sum is: 5.0", "The difference is: 5.0", "The product is: 0.0", "The quotient is: undefined (division by zero)"]),
-    (("-1", "-2"), ["The sum is: -3.0", "The difference is: 1.0", "The product is: 2.0", "The quotient is: 0.5"]),
-])
-def test_main_normal_and_edge_cases(input_values, expected_output):
+def test_main_with_normal_case(mock_inputs, mock_print):
     """
-    Test normal and edge cases for main function. It checks if the sum, difference, product,
-    and quotient are correctly calculated and printed.
+    Test main function with normal inputs.
     """
-    with mock_inputs(input_values), mock_print() as mocked_print:
-        main()
-        mocked_print.assert_has_calls([patch.call(output) for output in expected_output])
+    main()
+    mock_print.assert_any_call("The sum is: 5.0")
+    mock_print.assert_any_call("The difference is: 1.0")
+    mock_print.assert_any_call("The product is: 6.0")
+    mock_print.assert_any_call("The quotient is: 1.5")
 
-@pytest.mark.parametrize("input_values, error_message", [
-    (("a", "2"), ValueError),
-    (("2", "b"), ValueError),
-])
-def test_main_error_cases(input_values, error_message):
+def test_main_with_division_by_zero(mock_inputs_division_by_zero, mock_print):
     """
-    Test error cases for main function. It should raise a ValueError if the inputs
-    are not convertible to float.
+    Test main function when division by zero occurs.
     """
-    with mock_inputs(input_values), pytest.raises(error_message):
-        main()
+    main()
+    mock_print.assert_any_call("The sum is: 4.0")
+    mock_print.assert_any_call("The difference is: 4.0")
+    mock_print.assert_any_call("The product is: 0.0")
+    mock_print.assert_any_call("The quotient is: undefined (division by zero)")
 
-@pytest.mark.parametrize("input_values", [
-    ("2", "3"),
-    ("5", "0"),
-    ("-1", "-2"),
-])
-def test_main_success(input_values):
+def test_main_with_invalid_input():
     """
-    Test success scenarios for main function to ensure no exceptions are raised
-    for valid inputs.
+    Test main function with invalid input (mocking input to throw a ValueError).
     """
-    with mock_inputs(input_values):
-        try:
+    with mock.patch('builtins.input', side_effect=['a', '1']):
+        with pytest.raises(ValueError):
             main()
-        except Exception as e:
-            pytest.fail(f"Unexpected exception occurred: {e}")
 
-@pytest.mark.parametrize("input_values", [
-    ("1", "0"),
-    ("0", "0"),
-])
-def test_division_by_zero(input_values):
+def test_main_with_partial_invalid_input():
     """
-    Specifically testing division by zero scenarios to ensure the output
-    is "undefined (division by zero)".
+    Test main function with one valid and one invalid input.
     """
-    expected_output = "The quotient is: undefined (division by zero)"
-    with mock_inputs(input_values), mock_print() as mocked_print:
-        main()
-        mocked_print.assert_any_call(expected_output)
-```
-This test suite covers normal, edge, and error cases for the simple calculator script, including mocking user inputs and print statements to validate output without needing user interaction. It also handles division by zero and input type errors effectively.
+    with mock.patch('builtins.input', side_effect=['2', 'b']):
+        with pytest.raises(ValueError):
+            main()
