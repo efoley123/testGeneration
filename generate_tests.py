@@ -209,7 +209,7 @@ class TestGenerator:
 
         # Gather additional context from related test files
         
-        '''related_test_files = self.get_related_test_files(language, file_name)
+        related_test_files = self.get_related_test_files(language, file_name)
         related_test_content = ""
         # Log related files to confirm detection
         if related_test_files:
@@ -223,7 +223,7 @@ class TestGenerator:
                     related_test_content += f"\n\n// Related test file: {related_test_file}\n{file_content}"
                     logging.info(f"Included content from related test file: {related_test_file}")
             except Exception as e:
-                logging.error(f"Error reading related test file {related_test_file}: {e}")'''
+                logging.error(f"Error reading related test file {related_test_file}: {e}")
 
         # Add the file name at the top of the prompt
         framework = self.get_test_framework(language)
@@ -247,6 +247,7 @@ class TestGenerator:
         {related_content}
 
         Related test cases:
+        {related_test_content}
 
         Generate only the test code without any explanations or notes."""
 
