@@ -187,6 +187,11 @@ class TestGenerator:
         related_files = self.get_related_files(language, file_name)
         related_content = ""
 
+        # Log related files to confirm detection
+        if related_files:
+            logging.info(f"Related files for {file_name}: {related_files}")
+        else:
+            logging.info(f"No related files found for {file_name} to reference")
         for related_file in related_files:
             try:
                 with open(related_file, 'r') as rf:
