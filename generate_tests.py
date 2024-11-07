@@ -176,19 +176,19 @@ class TestGenerator:
        limited_test_files = related_test_files[:1]# List
        return limited_test_files  # List
   
-  def generate_coverage_report(self, test_file: Path, language: str):
+  def generate_coverage_report(self, file_name:str, test_file: Path, language: str):
         """Generate a code coverage report and save it as a text file."""
         report_file = test_file.parent / f"{test_file.stem}_coverage_report.txt"
-
+        base_name = Path(file_name).stem
         try:
             # Run tests with coverage based on language
             if language == "Python":
+                #subprocess.run(
+                #    ["coverage", "run", str(test_file)],
+                #    check=True
+                #)
                 subprocess.run(
-                    ["coverage", "run", str(test_file)],
-                    check=True
-                )
-                subprocess.run(
-                    ["coverage", "report", "-m", "--omit=*/site-packages/*"],
+                    ["pytest", str(test_file), "--cov="+str(base_name), "-cov-report=term-missing"],
                     stdout=open(report_file, "w"),
                     check=True
                 )
@@ -447,7 +447,7 @@ class TestGenerator:
                        self.ensure_coverage_installed(language)
 
                        test_file = self.save_test_cases(file_name, test_cases, language)
-                       self.generate_coverage_report(test_file, language)
+                       self.generate_coverage_report(file_name, test_file, language)
                    else:
                        logging.error(f"Failed to generate test cases for {file_name}")
            except Exception as e:

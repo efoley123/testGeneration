@@ -1,5 +1,4 @@
 #could import something
-#test
 
 def calculator(a, b, operation):
     if operation == '+':
