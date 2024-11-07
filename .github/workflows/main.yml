@@ -5,6 +5,7 @@ on:
      - main
      - "feature/*"
      - eleanor-br
+     - newPythonRepo
    paths:
      - '**.py'
      - '**.js'
