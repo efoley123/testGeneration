@@ -183,10 +183,6 @@ class TestGenerator:
         try:
             # Run tests with coverage based on language
             if language == "Python":
-                #subprocess.run(
-                #    ["coverage", "run", str(test_file)],
-                #    check=True
-                #)
                 subprocess.run(
                     ["pytest", str(test_file), "--cov="+str(base_name), "-cov-report=term-missing"],
                     stdout=open(report_file, "w"),
@@ -214,7 +210,7 @@ class TestGenerator:
         try:
             if language.lower() == 'python':
                 # Check if 'coverage' is installed for Python
-                #subprocess.check_call([sys.executable, '-m', 'pip', 'show', 'coverage'])
+                
                 subprocess.check_call([sys.executable, '-m','pip','install', 'pytest-cov'])
                 logging.info(f"Coverage tool for Python is already installed.")
             elif language.lower() == 'javascript':
@@ -238,7 +234,6 @@ class TestGenerator:
 
             try:
                 if language.lower() == 'python':
-                    #subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'coverage'])
                     subprocess.check_call([sys.executable, '-m','pip','install', 'pytest-cov'])
                     logging.info(f"Coverage tool for Python has been installed.")
                 elif language.lower() == 'javascript':
