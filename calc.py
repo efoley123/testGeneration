@@ -1,4 +1,7 @@
 # Basic Python Script: Simple Calculator
+
+from generated_tests.python.tictactoegame import TicTacToe
+
 def main():
 
     #only changing this file

@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
-from tictactoe import TicTacToe
+from tictactoegame import TicTacToe
+#from calc import main
 
 @pytest.fixture
 def tic_tac_toe_game():
