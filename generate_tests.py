@@ -215,7 +215,7 @@ class TestGenerator:
             if language.lower() == 'python':
                 # Check if 'coverage' is installed for Python
                 #subprocess.check_call([sys.executable, '-m', 'pip', 'show', 'coverage'])
-                subprocess.check_call([sys.executable, '-m','pip',' install', 'pytest-cov'])
+                subprocess.check_call([sys.executable, '-m','pip','install', 'pytest-cov'])
                 logging.info(f"Coverage tool for Python is already installed.")
             elif language.lower() == 'javascript':
                 # Check if 'jest' coverage is available for JavaScript
@@ -239,7 +239,7 @@ class TestGenerator:
             try:
                 if language.lower() == 'python':
                     #subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'coverage'])
-                    subprocess.check_call([sys.executable, '-m','pip',' install', 'pytest-cov'])
+                    subprocess.check_call([sys.executable, '-m','pip','install', 'pytest-cov'])
                     logging.info(f"Coverage tool for Python has been installed.")
                 elif language.lower() == 'javascript':
                     subprocess.check_call(['npm', 'install', 'jest'])
