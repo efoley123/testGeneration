@@ -435,7 +435,7 @@ class TestGenerator:
   def save_tests_created(self, test_file: Path,test_cases:str,language:str):
     
       try:
-          with open(test_file, 'w+', encoding='utf-8') as f:
+          with open(test_file, 'a', encoding='utf-8') as f:
               f.write(test_cases)
           logging.info(f"Test cases saved to {test_file}")
       except Exception as e:
