@@ -217,7 +217,7 @@ class TestGenerator:
             if language == "Python":
                 subprocess.run(
                     ["pytest", str(test_file), "--cov="+str(base_name), "--cov-report=term-missing"],
-                    stdout=open(report_file, "w+"),
+                    stdout=open(report_file, "w"),
                     check=True
                 )
             elif language == "JavaScript":
@@ -410,15 +410,15 @@ class TestGenerator:
       
   def save_test_cases(self, file_name: str, test_file, test_cases: str, language: str):
       """Save generated test cases to appropriate directory structure."""
-    #   tests_dir = Path('generated_tests')
-    #   tests_dir.mkdir(exist_ok=True)
-    #   lang_dir = tests_dir / language.lower()
-    #   lang_dir.mkdir(exist_ok=True)
-    #   base_name = Path(file_name).stem
-    #   if not base_name.startswith("test_"):
-    #       base_name = f"test_{base_name}"
-    #   extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
-    #   test_file = lang_dir / f"{base_name}{extension}"
+      tests_dir = Path('generated_tests')
+      tests_dir.mkdir(exist_ok=True)
+      lang_dir = tests_dir / language.lower()
+      lang_dir.mkdir(exist_ok=True)
+      base_name = Path(file_name).stem
+      if not base_name.startswith("test_"):
+          base_name = f"test_{base_name}"
+      extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
+      test_file = lang_dir / f"{base_name}{extension}"
       test_file = Path(test_file)
 
       header = ""
