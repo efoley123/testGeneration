@@ -1,0 +1,92 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+configfile: ov-report=term-missing
+plugins: cov-5.0.0
+collected 10 items
+
+generated_tests/python/test_calc.py FFF.......WARNING: Failed to generate report: No data to report.
+
+                                                                         [100%]
+
+=================================== FAILURES ===================================
+_______ test_main_normal_and_edge_cases[input_values0-expected_output0] ________
+
+input_values = ('2', '3')
+expected_output = ['The sum is: 5.0', 'The difference is: -1.0', 'The product is: 6.0', 'The quotient is: 0.6666666666666666']
+
+    @pytest.mark.parametrize("input_values, expected_output", [
+        (("2", "3"), ["The sum is: 5.0", "The difference is: -1.0", "The product is: 6.0", "The quotient is: 0.6666666666666666"]),
+        (("5", "0"), ["The sum is: 5.0", "The difference is: 5.0", "The product is: 0.0", "The quotient is: undefined (division by zero)"]),
+        (("-1", "-2"), ["The sum is: -3.0", "The difference is: 1.0", "The product is: 2.0", "The quotient is: 0.5"]),
+    ])
+    def test_main_normal_and_edge_cases(input_values, expected_output):
+        with mock_inputs(input_values), mock_print() as mocked_print:
+            main()
+>           mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+
+generated_tests/python/test_calc.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f1a393142b0>
+
+>   mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+E   AttributeError: 'function' object has no attribute 'call'
+
+generated_tests/python/test_calc.py:25: AttributeError
+_______ test_main_normal_and_edge_cases[input_values1-expected_output1] ________
+
+input_values = ('5', '0')
+expected_output = ['The sum is: 5.0', 'The difference is: 5.0', 'The product is: 0.0', 'The quotient is: undefined (division by zero)']
+
+    @pytest.mark.parametrize("input_values, expected_output", [
+        (("2", "3"), ["The sum is: 5.0", "The difference is: -1.0", "The product is: 6.0", "The quotient is: 0.6666666666666666"]),
+        (("5", "0"), ["The sum is: 5.0", "The difference is: 5.0", "The product is: 0.0", "The quotient is: undefined (division by zero)"]),
+        (("-1", "-2"), ["The sum is: -3.0", "The difference is: 1.0", "The product is: 2.0", "The quotient is: 0.5"]),
+    ])
+    def test_main_normal_and_edge_cases(input_values, expected_output):
+        with mock_inputs(input_values), mock_print() as mocked_print:
+            main()
+>           mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+
+generated_tests/python/test_calc.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f1a38f26dc0>
+
+>   mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+E   AttributeError: 'function' object has no attribute 'call'
+
+generated_tests/python/test_calc.py:25: AttributeError
+_______ test_main_normal_and_edge_cases[input_values2-expected_output2] ________
+
+input_values = ('-1', '-2')
+expected_output = ['The sum is: -3.0', 'The difference is: 1.0', 'The product is: 2.0', 'The quotient is: 0.5']
+
+    @pytest.mark.parametrize("input_values, expected_output", [
+        (("2", "3"), ["The sum is: 5.0", "The difference is: -1.0", "The product is: 6.0", "The quotient is: 0.6666666666666666"]),
+        (("5", "0"), ["The sum is: 5.0", "The difference is: 5.0", "The product is: 0.0", "The quotient is: undefined (division by zero)"]),
+        (("-1", "-2"), ["The sum is: -3.0", "The difference is: 1.0", "The product is: 2.0", "The quotient is: 0.5"]),
+    ])
+    def test_main_normal_and_edge_cases(input_values, expected_output):
+        with mock_inputs(input_values), mock_print() as mocked_print:
+            main()
+>           mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+
+generated_tests/python/test_calc.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f1a38f43910>
+
+>   mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
+E   AttributeError: 'function' object has no attribute 'call'
+
+generated_tests/python/test_calc.py:25: AttributeError
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calc.py::test_main_normal_and_edge_cases[input_values0-expected_output0] - AttributeError: 'function' object has no attribute 'call'
+FAILED generated_tests/python/test_calc.py::test_main_normal_and_edge_cases[input_values1-expected_output1] - AttributeError: 'function' object has no attribute 'call'
+FAILED generated_tests/python/test_calc.py::test_main_normal_and_edge_cases[input_values2-expected_output2] - AttributeError: 'function' object has no attribute 'call'
+========================= 3 failed, 7 passed in 0.09s ==========================
