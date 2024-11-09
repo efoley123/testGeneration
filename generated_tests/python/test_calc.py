@@ -3,7 +3,7 @@ from unittest.mock import patch
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-from calc import main
+from src.calc import main
 
 def mock_inputs(inputs):
     return patch('builtins.input', side_effect=inputs)
