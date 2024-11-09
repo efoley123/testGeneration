@@ -205,7 +205,7 @@ class TestGenerator:
 
            base_name = str(base_name).replace(current_path,'').replace('/', '.')
            
-           base_name = base_name.replace(file_name,"") #if (base_name) should still have .
+           base_name = base_name.replace(file_name.replace(".py",""),"") #if (base_name) should still have .
         else:
            # For other languages, the base_name remains the stem of the file
            base_name = Path(file_name).stem
