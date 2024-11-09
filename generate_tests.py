@@ -215,14 +215,14 @@ class TestGenerator:
             if language == "Python":
                 subprocess.run(
                     ["pytest", str(test_file), "--cov="+str(base_name), "--cov-report=term-missing"],
-                    stdout=open(report_file, "a"),
+                    stdout=open(report_file, "w+"),
                     check=True
                 )
             elif language == "JavaScript":
                 # Example for JavaScript - replace with the specific coverage tool and command
                 subprocess.run(
                     ["jest", "--coverage", "--config=path/to/jest.config.js"],
-                    stdout=open(report_file, "a"),
+                    stdout=open(report_file, "w"),
                     check=True
                 )
             # Add additional commands for other languages here
