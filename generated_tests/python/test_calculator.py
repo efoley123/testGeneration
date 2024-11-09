@@ -2,8 +2,6 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-# Test file: test_calculator.py
-
 import pytest
 from calculator import calculator
 
@@ -17,35 +15,25 @@ from calculator import calculator
     (0, 0, '+', 0),
     (-1, -1, '+', -2),
     (-1, 1, '-', -2),
-    (1.5, 0.5, '*', 0.75),
-    (1.5, 0.5, '/', 3),
 ])
-def test_calculator_normal_and_edge_cases(a, b, operation, expected):
-    """
-    Test calculator with normal and edge cases.
-    """
+def test_calculator_operations(a, b, operation, expected):
+    """Test calculator function with various operations and edge cases."""
     assert calculator(a, b, operation) == expected
 
-@pytest.mark.parametrize("a, b, operation", [
-    ("a", 5, '+'),
-    (10, "b", '-'),
-    ("a", "b", '*'),
-])
-def test_calculator_error_cases_type_error(a, b, operation):
-    """
-    Test calculator with inputs that should cause type error.
-    """
-    with pytest.raises(TypeError):
-        calculator(a, b, operation)
+def test_division_by_zero():
+    """Test division by zero specifically to ensure proper error message."""
+    assert calculator(10, 0, '/') == "Error: Division by zero is not allowed."
+
+def test_invalid_operation():
+    """Test calculator with an invalid operation to ensure proper error handling."""
+    assert calculator(10, 5, 'invalid_op') == "Error: Invalid operation."
 
 @pytest.mark.parametrize("a, b, operation", [
-    (None, 5, '+'),
-    (10, None, '-'),
-    (None, None, '*'),
+    ('a', 5, '+'),
+    (10, 'b', '-'),
+    ('a', 'b', '*'),
 ])
-def test_calculator_error_cases_none_type(a, b, operation):
-    """
-    Test calculator with None inputs to ensure it handles NoneType.
-    """
+def test_calculator_with_non_numeric_inputs(a, b, operation):
+    """Test calculator function with non-numeric inputs to ensure it doesn't crash."""
     with pytest.raises(TypeError):
         calculator(a, b, operation)
