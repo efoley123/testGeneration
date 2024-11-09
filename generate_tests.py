@@ -412,6 +412,7 @@ class TestGenerator:
 
       header = ""
       if language.lower() == 'python':
+          logging.info("will write python specific header")
           header = (
                 "import sys\n"
                 "import os\n"
@@ -425,6 +426,7 @@ class TestGenerator:
           with open(test_file, 'w', encoding='utf-8') as f:
               f.write(header)
               logging.info("wrote header in test file")
+              f.close
       except Exception as e:
           logging.error(f"Error adding header to {test_file}: {e}")
         
