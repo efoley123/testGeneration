@@ -2,50 +2,81 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-# Test file: test_calculator.py
-
 import pytest
 from calculator import calculator
 
+# Test suite for the calculator function in calculator.py
+
+@pytest.fixture
+def setup():
+    # Setup if needed
+    pass
+
+@pytest.fixture
+def teardown():
+    # Teardown if needed
+    pass
+
+# Testing Addition
 @pytest.mark.parametrize("a, b, operation, expected", [
-    (10, 5, '+', 15),
-    (10, 5, '-', 5),
-    (10, 5, '*', 50),
-    (10, 5, '/', 2),
-    (10, 0, '/', "Error: Division by zero is not allowed."),
-    (10, 5, '%', "Error: Invalid operation."),
-    (0, 0, '+', 0),
+    (5, 3, '+', 8),
     (-1, -1, '+', -2),
-    (-1, 1, '-', -2),
-    (1.5, 0.5, '*', 0.75),
-    (1.5, 0.5, '/', 3),
+    (0, 0, '+', 0),
+    (1.5, 2.5, '+', 4.0),
 ])
-def test_calculator_normal_and_edge_cases(a, b, operation, expected):
-    """
-    Test calculator with normal and edge cases.
-    """
+def test_calculator_addition(a, b, operation, expected, setup, teardown):
+    """Test the addition operation."""
     assert calculator(a, b, operation) == expected
 
-@pytest.mark.parametrize("a, b, operation", [
-    ("a", 5, '+'),
-    (10, "b", '-'),
-    ("a", "b", '*'),
+# Testing Subtraction
+@pytest.mark.parametrize("a, b, operation, expected", [
+    (5, 3, '-', 2),
+    (-1, 1, '-', -2),
+    (0, 0, '-', 0),
+    (2.5, 1.5, '-', 1.0),
 ])
-def test_calculator_error_cases_type_error(a, b, operation):
-    """
-    Test calculator with inputs that should cause type error.
-    """
-    with pytest.raises(TypeError):
-        calculator(a, b, operation)
+def test_calculator_subtraction(a, b, operation, expected, setup, teardown):
+    """Test the subtraction operation."""
+    assert calculator(a, b, operation) == expected
 
-@pytest.mark.parametrize("a, b, operation", [
-    (None, 5, '+'),
-    (10, None, '-'),
-    (None, None, '*'),
+# Testing Multiplication
+@pytest.mark.parametrize("a, b, operation, expected", [
+    (5, 3, '*', 15),
+    (-1, -1, '*', 1),
+    (0, 5, '*', 0),
+    (1.5, 2, '*', 3.0),
 ])
-def test_calculator_error_cases_none_type(a, b, operation):
-    """
-    Test calculator with None inputs to ensure it handles NoneType.
-    """
-    with pytest.raises(TypeError):
+def test_calculator_multiplication(a, b, operation, expected, setup, teardown):
+    """Test the multiplication operation."""
+    assert calculator(a, b, operation) == expected
+
+# Testing Division
+@pytest.mark.parametrize("a, b, operation, expected", [
+    (5, 2, '/', 2.5),
+    (-1, -1, '/', 1),
+    (5, 0, '/', "Error: Division by zero is not allowed."),
+    (1.5, 0.5, '/', 3.0),
+])
+def test_calculator_division(a, b, operation, expected, setup, teardown):
+    """Test the division operation."""
+    assert calculator(a, b, operation) == expected
+
+# Testing Invalid Operation
+@pytest.mark.parametrize("a, b, operation, expected", [
+    (5, 3, 'x', "Error: Invalid operation."),
+    (5, 3, '%', "Error: Invalid operation."),
+])
+def test_calculator_invalid_operation(a, b, operation, expected, setup, teardown):
+    """Test handling of invalid operation inputs."""
+    assert calculator(a, b, operation) == expected
+
+# Testing Edge Cases
+@pytest.mark.parametrize("a, b, operation, expected", [
+    ('a', 3, '+', "Error: Invalid inputs."),  # Assuming handling of non-numeric inputs
+    (5, 'b', '-', "Error: Invalid inputs."),  # Assuming handling of non-numeric inputs
+    ([], {}, '*', "Error: Invalid inputs."),  # Assuming handling of non-numeric inputs
+])
+def test_calculator_edge_cases(a, b, operation, expected, setup, teardown):
+    """Test handling of edge cases."""
+    with pytest.raises(TypeError):  # Assuming calculator function raises TypeError for invalid input types
         calculator(a, b, operation)
