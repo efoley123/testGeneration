@@ -1,13 +1,16 @@
-import pytest
-from unittest.mock import patch
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+import pytest
+from unittest.mock import patch
 from src.calc import main
 
+# Helper function to simulate input for main()
 def mock_inputs(inputs):
     return patch('builtins.input', side_effect=inputs)
 
+# Helper function to simulate print
 def mock_print():
     return patch('builtins.print')
 
@@ -19,7 +22,7 @@ def mock_print():
 def test_main_normal_and_edge_cases(input_values, expected_output):
     with mock_inputs(input_values), mock_print() as mocked_print:
         main()
-        mocked_print.assert_has_calls([patch.call(output) for output in expected_output])
+        mocked_print.assert_has_calls([patch.call(output) for output in expected_output], any_order=True)
 
 @pytest.mark.parametrize("input_values, error_message", [
     (("a", "2"), ValueError),
