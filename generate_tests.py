@@ -408,7 +408,7 @@ class TestGenerator:
           logging.error(f"API request failed: {e}")
           return None
       
-  def save_test_cases(self, file_name: str, test_file, test_cases: str, language: str):
+  def save_test_cases(self, file_name: str, test_cases: str, language: str):
       """Save generated test cases to appropriate directory structure."""
       tests_dir = Path('generated_tests')
       tests_dir.mkdir(exist_ok=True)
@@ -477,7 +477,7 @@ class TestGenerator:
 
                        self.ensure_coverage_installed(language)
 
-                       test_file = self.save_test_cases(file_name, test_file, test_cases, language)
+                       test_file = self.save_test_cases(file_name, test_cases, language)
                        self.generate_coverage_report(file_name, test_file, language)
                    else:
                        logging.error(f"Failed to generate test cases for {file_name}")
