@@ -419,7 +419,7 @@ class TestGenerator:
           base_name = f"test_{base_name}"
       extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
       test_file = lang_dir / f"{base_name}{extension}"
-      test_file = Path(test_file)
+      #test_file = Path(test_file)
 
       header = ""
 
@@ -469,7 +469,7 @@ class TestGenerator:
                
                if prompt:
                    
-                   test_file = self.generate_coverage_beforehand(file_name, language)
+                   #test_file = self.generate_coverage_beforehand(file_name, language)
                    test_cases = self.call_openai_api(prompt)
                    
                    if test_cases:
@@ -477,7 +477,7 @@ class TestGenerator:
 
                        self.ensure_coverage_installed(language)
 
-                       self.save_test_cases(file_name, test_file, test_cases, language)
+                       test_file = self.save_test_cases(file_name, test_file, test_cases, language)
                        self.generate_coverage_report(file_name, test_file, language)
                    else:
                        logging.error(f"Failed to generate test cases for {file_name}")
