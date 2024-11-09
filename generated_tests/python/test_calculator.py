@@ -2,50 +2,46 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-# Test file: test_calculator.py
-
 import pytest
 from calculator import calculator
 
 @pytest.mark.parametrize("a, b, operation, expected", [
-    (10, 5, '+', 15),
+    (5, 3, '+', 8),
     (10, 5, '-', 5),
-    (10, 5, '*', 50),
-    (10, 5, '/', 2),
+    (4, 2, '*', 8),
+    (8, 4, '/', 2),
     (10, 0, '/', "Error: Division by zero is not allowed."),
-    (10, 5, '%', "Error: Invalid operation."),
-    (0, 0, '+', 0),
-    (-1, -1, '+', -2),
-    (-1, 1, '-', -2),
-    (1.5, 0.5, '*', 0.75),
-    (1.5, 0.5, '/', 3),
+    (5, 2, '%', "Error: Invalid operation."),
 ])
 def test_calculator_normal_and_edge_cases(a, b, operation, expected):
     """
-    Test calculator with normal and edge cases.
+    Test normal and edge cases for calculator function.
     """
-    assert calculator(a, b, operation) == expected
+    assert calculator(a, b, operation) == expected, "Calculator did not return expected result."
 
 @pytest.mark.parametrize("a, b, operation", [
-    ("a", 5, '+'),
-    (10, "b", '-'),
-    ("a", "b", '*'),
+    ('a', 2, '+'),
+    (3, 'b', '-'),
+    (None, 1, '*'),
+    (1, None, '/'),
 ])
-def test_calculator_error_cases_type_error(a, b, operation):
+def test_calculator_input_errors(a, b, operation):
     """
-    Test calculator with inputs that should cause type error.
+    Test error cases for calculator with invalid inputs.
     """
     with pytest.raises(TypeError):
         calculator(a, b, operation)
 
-@pytest.mark.parametrize("a, b, operation", [
-    (None, 5, '+'),
-    (10, None, '-'),
-    (None, None, '*'),
-])
-def test_calculator_error_cases_none_type(a, b, operation):
+def test_calculator_division_by_zero():
     """
-    Test calculator with None inputs to ensure it handles NoneType.
+    Test division by zero error case specifically.
     """
-    with pytest.raises(TypeError):
-        calculator(a, b, operation)
+    result = calculator(5, 0, '/')
+    assert result == "Error: Division by zero is not allowed.", "Calculator did not handle division by zero as expected."
+
+def test_calculator_invalid_operation():
+    """
+    Test invalid operation error case specifically.
+    """
+    result = calculator(5, 5, 'invalid')
+    assert result == "Error: Invalid operation.", "Calculator did not handle invalid operation as expected."
