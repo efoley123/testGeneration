@@ -6,6 +6,7 @@ on:
      - "feature/*"
      - eleanor-br
      - newPythonRepo
+     - attrsbranch
    paths:
      - '**.py'
      - '**.js'
