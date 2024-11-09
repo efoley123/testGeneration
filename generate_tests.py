@@ -175,7 +175,7 @@ class TestGenerator:
       #print("related FILES HERE "+ ', '.join(related_files) + "\n")
        limited_test_files = related_test_files[:1]# List
        return limited_test_files  # List
-  def generate_coverage_beforehand(self, file_name:str, test_file: Path, language: str) ->str:
+  def generate_coverage_beforehand(self, file_name:str, language: str) ->str:
         tests_dir = Path('generated_tests')
         tests_dir.mkdir(exist_ok=True)
         lang_dir = tests_dir / language.lower()
@@ -186,10 +186,12 @@ class TestGenerator:
         extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
         test_file = lang_dir / f"{base_name}{extension}"
 
-        self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
-
-
-        return test_file
+        try:
+            self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Error generating the before coverage report for {test_file}: {e}")
+        logging.info("made the before test case generation" + str(test_file))
+        return str(test_file)
         
   
   def generate_coverage_report(self, file_name:str, test_file: Path, language: str):
@@ -462,7 +464,7 @@ class TestGenerator:
                
                if prompt:
                    
-                   test_file = coverage_beforehand = self.generate_coverage_beforehand(file_name, test_file, language)
+                   test_file = self.generate_coverage_beforehand(file_name, language)
                    test_cases = self.call_openai_api(prompt)
                    
                    if test_cases:
