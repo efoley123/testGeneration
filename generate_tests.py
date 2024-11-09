@@ -204,8 +204,8 @@ class TestGenerator:
            base_name = Path(file_name).resolve().with_suffix('')  # Remove the .py extension
 
            base_name = str(base_name).replace(current_path,'').replace('/', '.')
-           #if (base_name) should do .
-           base_name
+           
+           base_name = base_name.replace(file_name,"") #if (base_name) should still have .
         else:
            # For other languages, the base_name remains the stem of the file
            base_name = Path(file_name).stem
