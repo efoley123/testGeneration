@@ -200,7 +200,7 @@ class TestGenerator:
         report_file = test_file.parent / f"{test_file.stem}_coverage_report.txt"
         if language == "Python":
            # Get the full path of the base file and replace slashes with dots
-           current_path = str(os.path.dirname(os.path.abspath(__file__))) + "/"
+           current_path = str(os.path.dirname(os.path.abspath(__file__)))
            base_name = Path(file_name).resolve().with_suffix('')  # Remove the .py extension
 
            base_name = str(base_name).replace(current_path,'').replace('/', '.')
