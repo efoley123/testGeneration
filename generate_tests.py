@@ -175,6 +175,22 @@ class TestGenerator:
       #print("related FILES HERE "+ ', '.join(related_files) + "\n")
        limited_test_files = related_test_files[:1]# List
        return limited_test_files  # List
+  def generate_coverage_beforehand(self, file_name:str, test_file: Path, language: str) ->str:
+        tests_dir = Path('generated_tests')
+        tests_dir.mkdir(exist_ok=True)
+        lang_dir = tests_dir / language.lower()
+        lang_dir.mkdir(exist_ok=True) #made the path generated_tests/python
+        base_name = Path(file_name).stem 
+        if not base_name.startswith("test_"):
+          base_name = f"test_{base_name}" #making start with test_
+        extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
+        test_file = lang_dir / f"{base_name}{extension}"
+
+        self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
+
+
+        return test_file
+        
   
   def generate_coverage_report(self, file_name:str, test_file: Path, language: str):
         """Generate a code coverage report and save it as a text file."""
@@ -195,14 +211,14 @@ class TestGenerator:
             if language == "Python":
                 subprocess.run(
                     ["pytest", str(test_file), "--cov="+str(base_name), "--cov-report=term-missing"],
-                    stdout=open(report_file, "w"),
+                    stdout=open(report_file, "a"),
                     check=True
                 )
             elif language == "JavaScript":
                 # Example for JavaScript - replace with the specific coverage tool and command
                 subprocess.run(
                     ["jest", "--coverage", "--config=path/to/jest.config.js"],
-                    stdout=open(report_file, "w"),
+                    stdout=open(report_file, "a"),
                     check=True
                 )
             # Add additional commands for other languages here
@@ -386,17 +402,17 @@ class TestGenerator:
           logging.error(f"API request failed: {e}")
           return None
       
-  def save_test_cases(self, file_name: str, test_cases: str, language: str):
+  def save_test_cases(self, file_name: str, test_file, test_cases: str, language: str):
       """Save generated test cases to appropriate directory structure."""
-      tests_dir = Path('generated_tests')
-      tests_dir.mkdir(exist_ok=True)
-      lang_dir = tests_dir / language.lower()
-      lang_dir.mkdir(exist_ok=True)
-      base_name = Path(file_name).stem
-      if not base_name.startswith("test_"):
-          base_name = f"test_{base_name}"
-      extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
-      test_file = lang_dir / f"{base_name}{extension}"
+    #   tests_dir = Path('generated_tests')
+    #   tests_dir.mkdir(exist_ok=True)
+    #   lang_dir = tests_dir / language.lower()
+    #   lang_dir.mkdir(exist_ok=True)
+    #   base_name = Path(file_name).stem
+    #   if not base_name.startswith("test_"):
+    #       base_name = f"test_{base_name}"
+    #   extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
+    #   test_file = lang_dir / f"{base_name}{extension}"
 
       header = ""
 
@@ -445,15 +461,16 @@ class TestGenerator:
                prompt = self.create_prompt(file_name, language)
                
                if prompt:
+                   
+                   test_file = coverage_beforehand = self.generate_coverage_beforehand(file_name, test_file, language)
                    test_cases = self.call_openai_api(prompt)
                    
                    if test_cases:
                        test_cases = test_cases.replace("“", '"').replace("”", '"')
-                       #self.save_test_cases(file_name, test_cases, language)
 
                        self.ensure_coverage_installed(language)
 
-                       test_file = self.save_test_cases(file_name, test_cases, language)
+                       test_file = self.save_test_cases(file_name, test_file, test_cases, language)
                        self.generate_coverage_report(file_name, test_file, language)
                    else:
                        logging.error(f"Failed to generate test cases for {file_name}")
