@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch
 #from calculator import main  # Assuming the given code is saved in calculator
 from generated_tests.python.tictactoegame import TicTacToe
-from calc import main
+from src.calc import main
 
 
 # Helper function to simulate input for main()
