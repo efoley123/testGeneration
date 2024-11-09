@@ -409,11 +409,8 @@ class TestGenerator:
           base_name = f"test_{base_name}"
       extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
       test_file = lang_dir / f"{base_name}{extension}"
-      return test_file
-  
-  def save_tests_created(self, test_file: Path,test_cases:str,language:str):
-      header = ""
 
+      header = ""
       if language.lower() == 'python':
           header = (
                 "import sys\n"
@@ -423,10 +420,21 @@ class TestGenerator:
       elif language.lower() == 'go':
           #add stuff for go
           logging.info("go unwritten code for save_test_cases")
-          
+    
       try:
           with open(test_file, 'w', encoding='utf-8') as f:
-              f.write(header + test_cases)
+              f.write(header)
+              logging.info("wrote header in test file")
+      except Exception as e:
+          logging.error(f"Error adding header to {test_file}: {e}")
+        
+      return test_file
+  
+  def save_tests_created(self, test_file: Path,test_cases:str,language:str):
+    
+      try:
+          with open(test_file, 'w+', encoding='utf-8') as f:
+              f.write(test_cases)
           logging.info(f"Test cases saved to {test_file}")
       except Exception as e:
           logging.error(f"Error saving test cases to {test_file}: {e}")
@@ -467,10 +475,8 @@ class TestGenerator:
                        self.ensure_coverage_installed(language)
 
                        test_file_path = self.make_test_file(file_name,language)
-                       logging.info("Made it here before erroring out")
 
                        self.generate_coverage_beforehand(test_file_path,file_name,language)
-                       logging.info("generate_coverage_beforehand")
                        test_file = self.save_tests_created(test_file_path,test_cases, language)
                        self.generate_coverage_report(file_name, test_file, language)
                    else:
