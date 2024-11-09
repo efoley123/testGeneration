@@ -175,6 +175,7 @@ class TestGenerator:
       #print("related FILES HERE "+ ', '.join(related_files) + "\n")
        limited_test_files = related_test_files[:1]# List
        return limited_test_files  # List
+  
   def generate_coverage_beforehand(self, file_name:str, language: str) ->str:
         tests_dir = Path('generated_tests')
         tests_dir.mkdir(exist_ok=True)
@@ -190,7 +191,7 @@ class TestGenerator:
             self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
         except subprocess.CalledProcessError as e:
             logging.error(f"Error generating the before coverage report for {test_file}: {e}")
-        logging.info("made the before test case generation" + str(test_file))
+        logging.info("made the before test case generation  :" + str(test_file))
         return str(test_file)
         
   
@@ -198,15 +199,16 @@ class TestGenerator:
         """Generate a code coverage report and save it as a text file."""
         report_file = test_file.parent / f"{test_file.stem}_coverage_report.txt"
         if language == "Python":
-            # Get the full path of the base file and replace slashes with dots
-            current_path = str(os.path.dirname(os.path.abspath(__file__))) + "/"
-            base_name = Path(file_name).resolve().with_suffix('')  # Remove the .py extension
+           # Get the full path of the base file and replace slashes with dots
+           current_path = str(os.path.dirname(os.path.abspath(__file__))) + "/"
+           base_name = Path(file_name).resolve().with_suffix('')  # Remove the .py extension
 
-            base_name = str(base_name).replace(current_path,'').replace('/', '.')
-            base_name
+           base_name = str(base_name).replace(current_path,'').replace('/', '.')
+           #if (base_name) should do .
+           base_name
         else:
-            # For other languages, the base_name remains the stem of the file
-            base_name = Path(file_name).stem
+           # For other languages, the base_name remains the stem of the file
+           base_name = Path(file_name).stem
 
         try:
             # Run tests with coverage based on language
