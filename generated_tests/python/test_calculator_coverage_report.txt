@@ -1,0 +1,21 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 16 items
+
+generated_tests/python/test_calculator.py ................               [100%]
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             292    292     0%   1-493
+generated_tests/python/test_calculator.py      19      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         393    360     8%
+
+
+============================== 16 passed in 0.10s ==============================
