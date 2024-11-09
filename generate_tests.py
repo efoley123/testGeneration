@@ -419,6 +419,7 @@ class TestGenerator:
     #       base_name = f"test_{base_name}"
     #   extension = '.js' if language == 'JavaScript' else Path(file_name).suffix
     #   test_file = lang_dir / f"{base_name}{extension}"
+      test_file = Path(test_file)
 
       header = ""
 
