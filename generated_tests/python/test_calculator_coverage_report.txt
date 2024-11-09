@@ -1,0 +1,97 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 17 items
+
+generated_tests/python/test_calculator.py .................              [100%]
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             288    288     0%   1-487
+generated_tests/python/test_calculator.py      16      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         386    356     8%
+
+
+============================== 17 passed in 0.10s ==============================
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 17 items
+
+generated_tests/python/test_calculator.py .............FF..              [100%]
+
+=================================== FAILURES ===================================
+______________________ test_calculator_error_cases[a-b-+] ______________________
+
+a = 'a', b = 'b', operation = '+'
+
+    @pytest.mark.parametrize("a, b, operation", [
+        (1, 2, '%'),
+        ('a', 'b', '+'),
+        (None, None, '+'),
+        (10, 5, None),
+    ])
+    def test_calculator_error_cases(a, b, operation):
+        """
+        Test error cases for calculator function.
+        """
+>       assert calculator(a, b, operation) == "Error: Invalid operation."
+E       AssertionError: assert 'ab' == 'Error: Invalid operation.'
+E         
+E         - Error: Invalid operation.
+E         + ab
+
+generated_tests/python/test_calculator.py:38: AssertionError
+___________________ test_calculator_error_cases[None-None-+] ___________________
+
+a = None, b = None, operation = '+'
+
+    @pytest.mark.parametrize("a, b, operation", [
+        (1, 2, '%'),
+        ('a', 'b', '+'),
+        (None, None, '+'),
+        (10, 5, None),
+    ])
+    def test_calculator_error_cases(a, b, operation):
+        """
+        Test error cases for calculator function.
+        """
+>       assert calculator(a, b, operation) == "Error: Invalid operation."
+
+generated_tests/python/test_calculator.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a = None, b = None, operation = '+'
+
+    def calculator(a, b, operation):
+        if operation == '+':
+>           return a + b
+E           TypeError: unsupported operand type(s) for +: 'NoneType' and 'NoneType'
+
+calculator.py:7: TypeError
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             288    288     0%   1-487
+generated_tests/python/test_calculator.py      13      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         383    356     7%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::test_calculator_error_cases[a-b-+] - AssertionError: assert 'ab' == 'Error: Invalid operation.'
+  
+  - Error: Invalid operation.
+  + ab
+FAILED generated_tests/python/test_calculator.py::test_calculator_error_cases[None-None-+] - TypeError: unsupported operand type(s) for +: 'NoneType' and 'NoneType'
+========================= 2 failed, 15 passed in 0.12s =========================
