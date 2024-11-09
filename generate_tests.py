@@ -192,6 +192,8 @@ class TestGenerator:
         except subprocess.CalledProcessError as e:
             logging.error(f"Error generating the before coverage report for {test_file}: {e}")
         logging.info("made the before test case generation  :" + str(test_file))
+        var = os.path.exists('generated_tests/python/test_calculator.py')
+        logging.info(f"whether test file exsists {var}")
         return str(test_file)
         
   
@@ -474,7 +476,7 @@ class TestGenerator:
 
                        self.ensure_coverage_installed(language)
 
-                       test_file = self.save_test_cases(file_name, test_file, test_cases, language)
+                       self.save_test_cases(file_name, test_file, test_cases, language)
                        self.generate_coverage_report(file_name, test_file, language)
                    else:
                        logging.error(f"Failed to generate test cases for {file_name}")
