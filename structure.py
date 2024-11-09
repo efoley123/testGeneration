@@ -1,6 +1,6 @@
 import os
 import subprocess
-
+from pathlib import Path
 
 class RepoStructure:
     def __init__(self):
@@ -57,29 +57,37 @@ if __name__ == '__main__':
 
     current_path = os.path.dirname(os.path.abspath(__file__))
 
+    base_name = str(Path("tinydb/storages.py")).split(".")
+    val = base_name[0].replace(str(current_path),'')
+    val = val.replace('/','.')
+    
+    print("module_path = "+ val+"\n")
+
     print("current path is "+ current_path+ "\n")
-    repo_path = current_path
-    max_depth = 4  # Change this value to limit depth
-    file_extensions = [
-        '.py',   # Python files
-        '.js',   # JavaScript files
-        '.java', # Java files
-        '.c',    # C files
-        '.cpp',  # C++ files
-        '.h',    # C/C++ header files
-        '.rb',   # Ruby files
-        '.go',   # Go files
-        '.md',   # Markdown files for documentation
-        '.txt',  # Text files (optional)
-        'Dockerfile', # Dockerfile for environment context
-        'requirements.txt', # Python dependencies
-        'Pipfile', # Python dependency management
-        'package.json', # JavaScript dependencies
-        # Add any other specific file names or extensions you want to include
-    ]
-    test = RepoStructure()
-    structure = test.list_files()
-    print(structure)
+    
+    
+    # repo_path = current_path
+    # max_depth = 4  # Change this value to limit depth
+    # file_extensions = [
+    #     '.py',   # Python files
+    #     '.js',   # JavaScript files
+    #     '.java', # Java files
+    #     '.c',    # C files
+    #     '.cpp',  # C++ files
+    #     '.h',    # C/C++ header files
+    #     '.rb',   # Ruby files
+    #     '.go',   # Go files
+    #     '.md',   # Markdown files for documentation
+    #     '.txt',  # Text files (optional)
+    #     'Dockerfile', # Dockerfile for environment context
+    #     'requirements.txt', # Python dependencies
+    #     'Pipfile', # Python dependency management
+    #     'package.json', # JavaScript dependencies
+    #     # Add any other specific file names or extensions you want to include
+    # ]
+    # test = RepoStructure()
+    # structure = test.list_files()
+    # print(structure)
     #print('Filtered repository structure saved to repo_structure.txt\n')
 
     
