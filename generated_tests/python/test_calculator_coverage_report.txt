@@ -1,0 +1,60 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 0 items
+
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14     14     0%   3-20
+generate_tests.py                             305    305     0%   1-502
+generated_tests/python/test_calculator.py       3      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         390    387     1%
+
+============================ no tests ran in 0.07s =============================
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 17 items
+
+generated_tests/python/test_calculator.py ...............F.              [100%]
+
+=================================== FAILURES ===================================
+________________ test_calculator_type_errors[a2-5-*-TypeError] _________________
+
+a = [], b = 5, operation = '*', expected = 'TypeError'
+
+    @pytest.mark.parametrize("a, b, operation, expected", [
+        ('10', 5, '+', "TypeError"),
+        (10, '5', '-', "TypeError"),
+        ([], 5, '*', "TypeError"),
+        (10, {}, '/', "TypeError"),
+    ])
+    def test_calculator_type_errors(a, b, operation, expected):
+        """Test calculator function with types that should cause a TypeError."""
+        with pytest.raises(TypeError):
+>           calculator(a, b, operation)
+E           Failed: DID NOT RAISE <class 'TypeError'>
+
+generated_tests/python/test_calculator.py:45: Failed
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             305    305     0%   1-502
+generated_tests/python/test_calculator.py      17      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         404    373     8%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::test_calculator_type_errors[a2-5-*-TypeError] - Failed: DID NOT RAISE <class 'TypeError'>
+========================= 1 failed, 16 passed in 0.12s =========================
