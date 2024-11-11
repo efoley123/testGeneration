@@ -1,7 +1,5 @@
 #could import something
-#test1223222
-#test1d  sdf
-
+#test
 def calculator(a, b, operation):
     if operation == '+':
         return a + b
