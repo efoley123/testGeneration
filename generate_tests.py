@@ -126,6 +126,7 @@ class TestGenerator:
  def get_related_test_files(self, language: str, file_name: str) -> List[str]:
     """Identify the first related test file based on import statements or includes."""
     related_test_files = []  # Store paths of related test files
+    target_file = Path(file_name)  # Convert file_name to a Path object here
 
     try:
         if language == "Python":
@@ -147,13 +148,12 @@ class TestGenerator:
                                 # Break down the line into parts to check against the target file name
                                 parts = line.split()
                                 for part in parts:
-                                    # Handle imports with dots (modules) or paths
                                     normalized_part = part.replace(".", "/") if "." in part else part
 
-                                    # Check if part might represent a path or filename related to `file_name`
+                                    # Check if part might represent a path or filename related to `target_file`
                                     for ext in ('.py', '.js', '.ts'):
-                                        potential_file = f"{normalized_part}{ext}"
-                                        if Path(file_name).exists() and potential_file in str(file_name):
+                                        potential_file = Path(f"{normalized_part}{ext}")
+                                        if target_file.exists() and str(target_file) in str(potential_file):
                                             logging.info(f"Related test file found: {test_file}")
                                             related_test_files.append(str(test_file))
                                             break  # Exit loop upon finding the first related file
