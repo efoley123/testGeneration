@@ -283,49 +283,62 @@ class TestGenerator:
 
  def create_prompt(self, file_name: str, language: str) -> Optional[str]:
     """Create a language-specific prompt for test generation with accurate module and import names in related content."""
+    # Attempt to read the primary file's content
     try:
-        with open(file_name, 'r', encoding='utf-8') as f:
+        with open(file_name, 'r') as f:
             code_content = f.read()
     except Exception as e:
         logging.error(f"Error reading file {file_name}: {e}")
         return None
 
-    # Proceed with gathering related files and test content as before...
+    # Gather related files and their content
     related_files = self.get_related_files(language, file_name)
     related_content = ""
-    for related_file in related_files:
-        try:
-            with open(related_file, 'r', encoding='utf-8') as rf:
-                file_content = rf.read()
-                module_path = str(Path(related_file).with_suffix('')).replace('/', '.')
-                import_statement = f"import {module_path}"
-                related_content += f"\n\n// Module: {module_path}\n{import_statement}\n{file_content}"
-                logging.info(f"Included content from related file: {related_file} as module {module_path}")
-        except Exception as e:
-            logging.error(f"Error reading related file {related_file}: {e}")
+    if related_files:
+        for related_file in related_files:
+            try:
+                with open(related_file, 'r') as rf:
+                    file_content = rf.read()
+                    module_path = str(Path(related_file).with_suffix('')).replace('/', '.')
+                    import_statement = f"import {module_path}"
+                    related_content += f"\n\n// Module: {module_path}\n{import_statement}\n{file_content}"
+                    logging.info(f"Included content from related file: {related_file} as module {module_path}")
+            except Exception as e:
+                logging.error(f"Error reading related file {related_file}: {e}")
+    else:
+        logging.info(f"No related files found for {file_name}")
 
-    # Get related test files
+    # Gather related test files (using only the first one if there are multiple)
     related_test_files = self.get_related_test_files(language, file_name)
     related_test_content = ""
-    for related_test_file in related_test_files:
-        try:
-            with open(related_test_file, 'r', encoding='utf-8') as rf:
-                file_content = rf.read()
-                related_test_content += f"\n\n// Related test file: {related_test_file}\n{file_content}"
-                logging.info(f"Included content from related test file: {related_test_file}")
-        except Exception as e:
-            logging.error(f"Error reading related test file {related_test_file}: {e}")
+    if related_test_files:
+        first_test_file = related_test_files[0] if related_test_files else None
+        if first_test_file:
+            try:
+                with open(first_test_file, 'r') as rf:
+                    file_content = rf.read()
+                    related_test_content += f"\n\n// Related test file: {first_test_file}\n{file_content}"
+                    logging.info(f"Included content from related test file: {first_test_file}")
+            except Exception as e:
+                logging.error(f"Error reading related test file {first_test_file}: {e}")
+        else:
+            logging.info(f"No test files found for {file_name}")
+    else:
+        logging.info(f"No related test files found for {file_name}")
 
-    # Get the test framework
+    # Determine test framework
     framework = self.get_test_framework(language)
 
-    # Generate coverage data
-    if related_test_files:
-        uncovered_lines = self.generate_coverage_beforehand(related_test_files[0], file_name, language)
-        uncovered_lines_text = f"Uncovered lines: {uncovered_lines}" if uncovered_lines else "All lines are covered by existing tests."
+    # Generate uncovered lines information
+    uncovered_lines = self.generate_coverage_beforehand(first_test_file, file_name, language) if first_test_file else []
+    if uncovered_lines:
+        uncovered_lines_text = f"Uncovered lines: {uncovered_lines}"
+        logging.info(f"Uncovered lines for {file_name}: {uncovered_lines}")
     else:
-        uncovered_lines_text = ""
-    # Create the prompt with uncovered lines text included
+        uncovered_lines_text = "All lines are covered by existing tests."
+        logging.info(f"All lines are covered for {file_name}")
+
+    # Construct the prompt
     prompt = f"""Generate unit tests for the following {language} file: {file_name} using {framework}. 
 
     Requirements:
@@ -349,6 +362,7 @@ class TestGenerator:
     Related test cases:
     {related_test_content}
 
+    Coverage report:
     {uncovered_lines_text}
 
     Generate only the test code without any explanations or notes.
