@@ -1,0 +1,60 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 0 items
+
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14     14     0%   3-20
+generate_tests.py                             343    343     0%   1-564
+generated_tests/python/test_calculator.py       3      0   100%
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         442    439     1%
+
+============================ no tests ran in 0.07s =============================
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 14 items
+
+generated_tests/python/test_calculator.py .............F                 [100%]
+
+=================================== FAILURES ===================================
+____________________ test_calculator_error_cases[10-5-None] ____________________
+
+a = 10, b = 5, operation = None
+
+    @pytest.mark.parametrize("a, b, operation", [
+        (None, 5, '+'),
+        ('a', 5, '+'),
+        (10, 'b', '-'),
+        (10, 5, None),
+    ])
+    def test_calculator_error_cases(a, b, operation):
+        """Test calculator function with error cases, expecting exceptions."""
+        with pytest.raises((TypeError, ValueError)):
+>           calculator(a, b, operation)
+E           Failed: DID NOT RAISE (<class 'TypeError'>, <class 'ValueError'>)
+
+generated_tests/python/test_calculator.py:34: Failed
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             343    343     0%   1-564
+generated_tests/python/test_calculator.py      12      0   100%
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         451    425     6%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::test_calculator_error_cases[10-5-None] - Failed: DID NOT RAISE (<class 'TypeError'>, <class 'ValueError'>)
+========================= 1 failed, 13 passed in 0.11s =========================
