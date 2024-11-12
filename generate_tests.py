@@ -545,10 +545,9 @@ class TestGenerator:
 
                       self.ensure_coverage_installed(language)
 
-                      
+                      test_file_path = self.make_test_file(file_name,language)
 
                       self.generate_coverage_beforehand(test_file_path,file_name,language)
-                      test_file_path = self.make_test_file(file_name,language)
                       test_file = self.save_tests_created(test_file_path,test_cases, language)
                       self.generate_coverage_report(file_name, test_file, language)
                   else:
