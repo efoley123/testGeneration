@@ -1,0 +1,54 @@
+Name                                           Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------------
+calculator.py                                     14      9    36%   6-16
+generated_tests/python/test_calc.py               32      2    94%   41-42
+generated_tests/python/test_calculator12.py        8      0   100%
+generated_tests/python/test_calculator.py          3      0   100%
+generated_tests/python/test_tictactoegame.py      94      0   100%
+generated_tests/python/tictactoegame.py          150     64    57%   15, 18-19, 60, 63, 83, 87-88, 97, 121-122, 126-131, 134-183, 186
+src/calc.py                                       11      0   100%
+test_calc2.py                                     30      2    93%   56-57
+----------------------------------------------------------------------------
+TOTAL                                            342     77    77%
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 22 items
+
+generated_tests/python/test_calculator.py ................F.....         [100%]
+
+=================================== FAILURES ===================================
+_________________ test_calculator_with_non_numeric_inputs[a-b] _________________
+
+a = 'a', b = 'b'
+
+    @pytest.mark.parametrize("a, b", [
+        ("a", 3),
+        (5, "b"),
+        ("a", "b"),
+    ])
+    def test_calculator_with_non_numeric_inputs(a, b):
+        """
+        Test calculator function with non-numeric inputs to ensure it raises a TypeError.
+        """
+        with pytest.raises(TypeError):
+>           calculator(a, b, '+')
+E           Failed: DID NOT RAISE <class 'TypeError'>
+
+generated_tests/python/test_calculator.py:41: Failed
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             347    347     0%   1-571
+generated_tests/python/test_calculator.py      25      0   100%
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         468    429     8%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::test_calculator_with_non_numeric_inputs[a-b] - Failed: DID NOT RAISE <class 'TypeError'>
+========================= 1 failed, 21 passed in 0.13s =========================
