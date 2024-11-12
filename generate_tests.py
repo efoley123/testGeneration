@@ -324,7 +324,7 @@ class TestGenerator:
         uncovered_lines = self.generate_coverage_beforehand(related_test_files[0], file_name, language)
         uncovered_lines_text = f"Uncovered lines: {uncovered_lines}" if uncovered_lines else "All lines are covered by existing tests."
     else:
-        uncovered_lines = ""
+        uncovered_lines_text = ""
     # Create the prompt with uncovered lines text included
     prompt = f"""Generate unit tests for the following {language} file: {file_name} using {framework}. 
 
