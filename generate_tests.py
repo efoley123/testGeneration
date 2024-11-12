@@ -320,7 +320,7 @@ class TestGenerator:
     framework = self.get_test_framework(language)
 
     # Generate coverage data
-    uncovered_lines = self.generate_coverage_beforehand(related_test_files, file_name, language)
+    uncovered_lines = self.generate_coverage_beforehand(related_test_files[0], file_name, language)
     uncovered_lines_text = f"Uncovered lines: {uncovered_lines}" if uncovered_lines else "All lines are covered by existing tests."
 
     # Create the prompt with uncovered lines text included
