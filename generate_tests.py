@@ -230,12 +230,19 @@ class TestGenerator:
     
 
  def generate_coverage_beforehand(self, test_file:Path, file_name:str, language: str):
+       if (language=="Python"):
+            try:
+                report_file = test_file.parent / f"{test_file.stem}_coverage_report.txt"
+                subprocess.run(["coverage",'erase'])
+                subprocess.run(["coverage","run","-m","pytest"])
+                subprocess.run(["coverage","report", "-m"],stdout=report_file,check=True)
+                #self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
 
-       try:
-           self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
-       except subprocess.CalledProcessError as e:
-           logging.error(f"Error generating the before coverage report for {test_file}: {e}")
-       logging.info("made the before test case generation  :" + str(test_file))
+            except subprocess.CalledProcessError as e:
+                logging.error(f"Error generating the before coverage report for {test_file}: {e}")
+            logging.info("made the before test case generation  :" + str(test_file))
+            
+        
        
        
  
