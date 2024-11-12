@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 0 items
+
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14     14     0%   3-20
+generate_tests.py                             305    305     0%   1-502
+generated_tests/python/test_calculator.py       3      0   100%
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         404    401     1%
+
+============================ no tests ran in 0.07s =============================
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 23 items
+
+generated_tests/python/test_calculator.py .......................        [100%]
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             305    305     0%   1-502
+generated_tests/python/test_calculator.py      24      1    96%   53
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         425    388     9%
+
+
+============================== 23 passed in 0.13s ==============================
