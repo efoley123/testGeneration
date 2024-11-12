@@ -382,6 +382,7 @@ class TestGenerator:
         allCoverageReport = self.all_test_files_before(language,file_name)
       except Exception as e:
           logging.error(f"Error with doing the allCoverageReport:{e}")
+          allCoverageReport = "Was not able to get the coverage of the file beforehand"
      
       logging.info("Processing all test files before :) ")
 
