@@ -124,29 +124,41 @@ class TestGenerator:
     return related_files
 
  def get_related_test_files(self, language: str, file_name: str) -> List[str]:
-    """Identify related test files based on import statements or includes."""
-    related_test_files = []  # Store related test files' paths
+    """Identify the first related test file based on import statements or includes."""
+    related_test_files = []  # Store paths of related test files
 
     try:
         if language == "Python":
-            # Get the current directory where the script is located
+            # Define the directory to search in
             directory = Path(os.path.dirname(os.path.abspath(__file__)))
+            logging.debug(f"Searching for related test files in directory: {directory}")
 
-            # Search for test files with common test naming patterns in the current directory and subdirectories
-            test_files = list(directory.rglob("tests.py")) + list(directory.rglob("test.py")) + \
-                         list(directory.rglob("test_*.py")) + list(directory.rglob("*_test.py"))
+            # Common test file naming patterns
+            test_patterns = ["tests.py", "test.py", "test_*.py", "*_test.py"]
+            test_files = [file for pattern in test_patterns for file in directory.rglob(pattern)]
+            logging.debug(f"Test files found with patterns {test_patterns}: {[str(f) for f in test_files]}")
 
-            # Loop through each test file to check if it imports the changed file
+            # Iterate through each test file to check for potential imports or related identifiers
             for test_file in test_files:
                 try:
-                    with open(test_file, 'r', encoding='utf-8') as f:
-                        # Read each line of the test file
+                    with open(test_file, 'r') as f:
                         for line in f:
-                            if 'import' in line or 'from' in line:  # Check for import statements
-                                # Search for the filename or module in the import line
-                                if file_name in line:
-                                    related_test_files.append(str(test_file))
-                                    break  # Stop after finding the first match in this test file
+                            if 'import' in line or 'from ' in line:
+                                # Break down the line into parts to check against the target file name
+                                parts = line.split()
+                                for part in parts:
+                                    # Handle imports with dots (modules) or paths
+                                    normalized_part = part.replace(".", "/") if "." in part else part
+
+                                    # Check if part might represent a path or filename related to `file_name`
+                                    for ext in ('.py', '.js', '.ts'):
+                                        potential_file = f"{normalized_part}{ext}"
+                                        if Path(file_name).exists() and potential_file in str(file_name):
+                                            logging.info(f"Related test file found: {test_file}")
+                                            related_test_files.append(str(test_file))
+                                            break  # Exit loop upon finding the first related file
+                        if related_test_files:  # Limit to first match
+                            break
                 except Exception as e:
                     logging.error(f"Error reading test file {test_file}: {e}")
 
@@ -155,8 +167,9 @@ class TestGenerator:
 
     except Exception as e:
         logging.error(f"Error identifying related test files for {file_name}: {e}")
-    
-    return limited_test_files  # Return the list of related test file paths
+        limited_test_files = []
+
+    return limited_test_files
  
  def generate_coverage_beforehand(self, test_file_path: Path, changed_file: str, language: str):
     """Generate line coverage for the changed file before test generation."""

@@ -1,6 +1,6 @@
 import random
 import json
-#t
+#
 class TicTacToe:
     def __init__(self, board_size=3):
         self.board_size = board_size
