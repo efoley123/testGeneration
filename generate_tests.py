@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from requests.exceptions import RequestException
 from typing import List, Optional, Dict, Any
+import re
 
 # Set up logging
 logging.basicConfig(
@@ -203,12 +204,19 @@ class TestGenerator:
 
 
 
-            if (file_name in coverageRunResult): 
-                #means it contains coverage about the file we want'
-                #parse
-                #stripped_lines = [coverageRunResult.strip() for "%" in coverageRunResult]
-                #print(stripped_lines+ "\n")
-                print("hi")
+            # Find the line that starts with "calculator.py"
+            match = re.search(r"^"+file_name_path.stem+"\.py\s+.*", coverageRunResult, re.MULTILINE)
+
+            # Extract the matched line
+            if match:
+                calculator_line = match.group(0)
+                coverageRunResult = calculator_line
+                match = re.search(r"%\s+(.*)", calculator_line)
+                coverageRunResult = match.group(0)
+                print(calculator_line)
+
+            else:
+                print("Line for 'calculator.py' not found.")
 
                 
         
@@ -218,7 +226,7 @@ class TestGenerator:
         coverageRunResult = "The coverageReportDidNotHappen"
     elif ("Error" in coverageRunResult or "error" in coverageRunResult):
         coverageRunResult = "There was an error somewhere in the result"
-    return parts
+    return coverageRunResult
     
 
  def generate_coverage_beforehand(self, test_file:Path, file_name:str, language: str):
@@ -527,8 +535,8 @@ class TestGenerator:
               
               if prompt:
                   
-                  #test_cases = self.call_openai_api(prompt)
-                  print(prompt)
+                  test_cases = self.call_openai_api(prompt)
+                  #print(prompt)
                   if test_cases:
                       test_cases = test_cases.replace("“", '"').replace("”", '"')
 
@@ -536,7 +544,7 @@ class TestGenerator:
 
                       
 
-                      #self.generate_coverage_beforehand(test_file_path,file_name,language)
+                      self.generate_coverage_beforehand(test_file_path,file_name,language)
                       test_file_path = self.make_test_file(file_name,language)
                       test_file = self.save_tests_created(test_file_path,test_cases, language)
                       self.generate_coverage_report(file_name, test_file, language)
