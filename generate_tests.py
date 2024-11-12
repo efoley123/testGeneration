@@ -182,6 +182,45 @@ class TestGenerator:
       limited_test_files = related_test_files[:1]# List
       return limited_test_files  # List
  
+ def all_test_files_before(self, language: str, file_name: str) -> str:
+     #run coverage run
+     #know if there is an ini file probably won't work
+     #if it generates an error don't pass it in
+     #.....
+     #if the file is 100% coverage probably don't want test cases for it
+    coverageRunResult = ""
+    file_name_path= Path(file_name)
+    report_file = f"{file_name_path.stem}_coverage_report.txt" #make a file temporarily
+    try:
+        if (language=='Python'):
+            #python
+            subprocess.run(["coverage","run","-m","pytest"])
+            #subprocess.run(["coverage","report", "-m"],stdout=coverageRunResult,check=True)
+            subprocess.run(["coverage","report", "-m"],stdout=open(report_file, "a"),check=True)
+            with open(report_file, "r") as file:
+                coverageRunResult = file.read()
+            os.remove(report_file) # deleting it now
+
+
+
+            if (file_name in coverageRunResult): 
+                #means it contains coverage about the file we want'
+                #parse
+                #stripped_lines = [coverageRunResult.strip() for "%" in coverageRunResult]
+                #print(stripped_lines+ "\n")
+                print("hi")
+
+                
+        
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error generating the all test files coverage report for {file_name}: {e}")
+    if (coverageRunResult==""):
+        coverageRunResult = "The coverageReportDidNotHappen"
+    elif ("Error" in coverageRunResult or "error" in coverageRunResult):
+        coverageRunResult = "There was an error somewhere in the result"
+    return parts
+    
+
  def generate_coverage_beforehand(self, test_file:Path, file_name:str, language: str):
 
        try:
@@ -239,8 +278,9 @@ class TestGenerator:
        try:
            if language.lower() == 'python':
                # Check if 'coverage' is installed for Python
-               
+               subprocess.check_call([sys.executable, '-m','pip','install', 'coverage','pytest'])#pip install coverage pytest
                subprocess.check_call([sys.executable, '-m','pip','install', 'pytest-cov'])
+               subprocess.check_call([sys.executable, '-m','coverage','erase'])#coverage erase
                logging.info(f"Coverage tool for Python is already installed.")
            elif language.lower() == 'javascript':
                # Check if 'jest' coverage is available for JavaScript
@@ -329,6 +369,14 @@ class TestGenerator:
           except Exception as e:
               logging.error(f"Error reading related test file {related_test_file}: {e}")
 
+      
+      try:
+        allCoverageReport = self.all_test_files_before(language,file_name)
+      except Exception as e:
+          logging.error(f"Error with doing the allCoverageReport:{e}")
+     
+      logging.info("Processing all test files before :) ")
+
       # Add the file name at the top of the prompt
       framework = self.get_test_framework(language)
       prompt = f"""Generate comprehensive unit tests for the following {language} file: {file_name} using {framework}.
@@ -352,6 +400,9 @@ class TestGenerator:
 
       Related test cases:
       {related_test_content}
+
+      Here are the uncovered lines in the file to make test cases for:
+      {allCoverageReport.strip()}
 
       Generate only the test code without any explanations or notes."""
 
@@ -477,15 +528,16 @@ class TestGenerator:
               if prompt:
                   
                   #test_cases = self.call_openai_api(prompt)
-                  
+                  print(prompt)
                   if test_cases:
                       test_cases = test_cases.replace("“", '"').replace("”", '"')
 
                       self.ensure_coverage_installed(language)
 
-                      test_file_path = self.make_test_file(file_name,language)
+                      
 
-                      self.generate_coverage_beforehand(test_file_path,file_name,language)
+                      #self.generate_coverage_beforehand(test_file_path,file_name,language)
+                      test_file_path = self.make_test_file(file_name,language)
                       test_file = self.save_tests_created(test_file_path,test_cases, language)
                       self.generate_coverage_report(file_name, test_file, language)
                   else:
