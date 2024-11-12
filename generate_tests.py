@@ -17,11 +17,11 @@ logging.basicConfig(
 
 class TestGenerator:
  def __init__(self):
-     self.api_key = os.getenv('OPENAI_API_KEY')
-     self.model = os.getenv('OPENAI_MODEL', 'o1-preview')
+     self.api_key = 'test'#os.getenv('OPENAI_API_KEY')
+     self.model = 'gpt-3.5-turbo'#os.getenv('OPENAI_MODEL', 'o1-preview')
      
      try:
-         self.max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', '2000'))
+         self.max_tokens = 2000#int(os.getenv('OPENAI_MAX_TOKENS', '2000'))
      except ValueError:
          logging.error("Invalid value for OPENAI_MAX_TOKENS. Using default value: 2000")
          self.max_tokens = 2000
@@ -536,8 +536,8 @@ class TestGenerator:
               
               if prompt:
                   
-                  test_cases = self.call_openai_api(prompt)
-                  #print(prompt)
+                  #test_cases = self.call_openai_api(prompt)
+                  logging.info(prompt)
                   if test_cases:
                       test_cases = test_cases.replace("“", '"').replace("”", '"')
 
