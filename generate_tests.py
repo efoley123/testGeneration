@@ -233,9 +233,9 @@ class TestGenerator:
        if (language=="Python"):
             try:
                 report_file = test_file.parent / f"{test_file.stem}_coverage_report.txt"
-                subprocess.run(["coverage",'erase'])
+                subprocess.run(["coverage","erase"])
                 subprocess.run(["coverage","run","-m","pytest"])
-                subprocess.run(["coverage","report", "-m"],stdout=report_file,check=True)
+                subprocess.run(["coverage","report", "-m"],stdout=open(report_file, "a"),check=True)
                 #self.generate_coverage_report(file_name,test_file,language) #generating the coverage report
 
             except subprocess.CalledProcessError as e:
