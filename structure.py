@@ -63,7 +63,28 @@ if __name__ == '__main__':
     
     print("module_path = "+ val+"\n")
 
+    current_path = str(os.path.dirname(os.path.abspath(__file__)))
+    
+    current_path = str(os.path.dirname(os.path.abspath(__file__))) + "/"
     print("current path is "+ current_path+ "\n")
+
+    file_name = "tinydb/storage.py"
+    base_name = Path(file_name).resolve()
+    print("step "+ str(base_name)+"\n")
+    base_name = str(base_name).replace(current_path,'').replace('/', '.') 
+    print("step "+ base_name+"\n")
+    base_name = base_name.replace(file_name,"")
+
+    print("module_path = "+ base_name+"\n")
+
+    file_name = "calculator.py"
+    base_name = Path(file_name).resolve()
+    base_name = str(base_name).replace(current_path,'').replace('/', '.') 
+    base_name = base_name.replace(file_name,"")
+
+    print("module_path = "+ base_name+"\n")
+
+    
     
     
     # repo_path = current_path
