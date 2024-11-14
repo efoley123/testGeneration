@@ -427,7 +427,54 @@ class TestGenerator:
       return prompt
 
 
- def call_openai_api(self, prompt: str) -> Optional[str]:
+ def call_openai_api_gptseries(self, prompt: str) -> Optional[str]:
+     """Call OpenAI API to generate test cases."""
+     headers = {
+         'Content-Type': 'application/json',
+         'Authorization': f'Bearer {self.api_key}'
+     }
+     
+     data = {
+         'model': self.model,
+         'messages': [
+             {
+                 "role": "system",
+                 "content": "You are a senior software engineer specialized in writing comprehensive test suites."
+             },
+             {
+                 "role": "user",
+                 "content": prompt
+             }
+         ],
+         'max_tokens': self.max_tokens,
+         'temperature': 0.7
+     }
+
+     try:
+         response = requests.post(
+             'https://api.openai.com/v1/chat/completions',
+             headers=headers,
+             json=data,
+             timeout=60
+         )
+         response.raise_for_status()
+         generated_text = response.json()['choices'][0]['message']['content']
+         normalized_text = generated_text.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+         if normalized_text.startswith('```'):
+             first_newline_index = normalized_text.find('\n', 3)
+             if first_newline_index != -1:
+                 normalized_text = normalized_text[first_newline_index+1:]
+             else:
+                 normalized_text = normalized_text[3:]
+             if normalized_text.endswith('```'):
+                 normalized_text = normalized_text[:-3]
+         return normalized_text.strip()
+     except RequestException as e:
+         logging.error(f"API request failed: {e}, Response: {response.text}")
+         return None
+     
+ 
+ def call_openai_api_mini(self, prompt: str) -> Optional[str]:
      """Call OpenAI API to generate test cases."""
      headers = {
          'Content-Type': 'application/json',
@@ -539,7 +586,7 @@ class TestGenerator:
               
               if prompt:
                   
-                  test_cases = self.call_openai_api(prompt)
+                  test_cases = self.call_openai_api_gptseries(prompt)
                   logging.info(prompt+ "\n\n\n")
                   logging.info("this is test_cases result"+ test_cases)
                   if test_cases:
