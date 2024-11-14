@@ -470,7 +470,7 @@ class TestGenerator:
                  normalized_text = normalized_text[:-3]
          return normalized_text.strip()
      except RequestException as e:
-         logging.error(f"API request failed: {e}")
+         logging.error(f"API request failed: {e}, Response: {response.text}")
          return None
      
  def make_test_file(self, file_name: str, language: str) -> Path:
