@@ -1,0 +1,57 @@
+Name                                           Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------------
+calculator.py                                     14      9    36%   6-16
+generated_tests/python/test_calc.py               32      2    94%   41-42
+generated_tests/python/test_calculator12.py        8      0   100%
+generated_tests/python/test_calculator.py          3      0   100%
+generated_tests/python/test_tictactoegame.py      94      0   100%
+generated_tests/python/tictactoegame.py          150     64    57%   15, 18-19, 60, 63, 83, 87-88, 97, 121-122, 126-131, 134-183, 186
+src/calc.py                                       11      0   100%
+test_calc2.py                                     30      2    93%   56-57
+----------------------------------------------------------------------------
+TOTAL                                            342     77    77%
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 37 items
+
+generated_tests/python/test_calculator.py .............................. [ 81%]
+F......                                                                  [100%]
+
+=================================== FAILURES ===================================
+________________ TestCalculator.test_invalid_input_types[1-0-/] ________________
+
+self = <test_calculator.TestCalculator object at 0x7fcaff88f8b0>, a = 1, b = 0
+operation = '/'
+
+    @pytest.mark.parametrize("a, b, operation", [
+        ("a", 1, '+'),
+        (1, "b", '-'),
+        ("c", "d", '*'),
+        (1, 0, '/'),
+    ])
+    def test_invalid_input_types(self, a, b, operation):
+        """
+        Test invalid input types to ensure TypeError is raised.
+        """
+        with pytest.raises(TypeError):
+>           calculator(a, b, operation)
+E           Failed: DID NOT RAISE <class 'TypeError'>
+
+generated_tests/python/test_calculator.py:105: Failed
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             347    347     0%   1-566
+generated_tests/python/test_calculator.py      41      0   100%
+structure.py                                   52     52     0%   1-85
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         484    429    11%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::TestCalculator::test_invalid_input_types[1-0-/] - Failed: DID NOT RAISE <class 'TypeError'>
+========================= 1 failed, 36 passed in 0.17s =========================
