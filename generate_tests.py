@@ -438,10 +438,6 @@ class TestGenerator:
          'model': self.model,
          'messages': [
              {
-                 "role": "system",
-                 "content": "You are a senior software engineer specialized in writing comprehensive test suites."
-             },
-             {
                  "role": "user",
                  "content": prompt
              }
