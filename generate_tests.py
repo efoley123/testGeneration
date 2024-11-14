@@ -442,8 +442,7 @@ class TestGenerator:
                  "content": prompt
              }
          ],
-         'max_completion_tokens': self.max_tokens,
-         'temperature': 0.7
+         'max_completion_tokens': self.max_tokens
      }
 
      try:
