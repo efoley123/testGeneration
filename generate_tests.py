@@ -9,6 +9,7 @@ from requests.exceptions import RequestException
 from typing import List, Optional, Dict, Any
 import re
 
+
 # Set up logging
 logging.basicConfig(
  level=logging.INFO,
@@ -17,7 +18,7 @@ logging.basicConfig(
 
 class TestGenerator:
  def __init__(self):
-     self.api_key = os.getenv('OPENAI_API_KEY')
+     self.api_key = os.getenv('OPENAI_API_KEY') #key
      self.model = os.getenv('OPENAI_MODEL', 'o1-preview')
      
      try:
