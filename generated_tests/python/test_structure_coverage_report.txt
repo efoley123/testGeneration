@@ -1,0 +1,104 @@
+Name                                           Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------------
+calculator.py                                     14      9    36%   6-16
+generated_tests/python/test_calc.py               32      2    94%   41-42
+generated_tests/python/test_calculator12.py        8      0   100%
+generated_tests/python/test_calculator.py          0      0   100%
+generated_tests/python/test_structure.py           3      0   100%
+generated_tests/python/test_tictactoegame.py      94      0   100%
+generated_tests/python/tictactoegame.py          150     64    57%   15, 18-19, 60, 63, 83, 87-88, 97, 121-122, 126-131, 134-183, 186
+src/calc.py                                       11      0   100%
+test_calc2.py                                     30      2    93%   56-57
+----------------------------------------------------------------------------
+TOTAL                                            342     77    77%
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 8 items
+
+generated_tests/python/test_structure.py FEEEEEE.                        [100%]
+
+==================================== ERRORS ====================================
+___ ERROR at setup of TestRepoStructure.test_list_files_with_mocked_os_walk ____
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 22
+      def test_list_files_with_mocked_os_walk(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:22
+_ ERROR at setup of TestRepoStructure.test_list_files_ignore_git_and_github_dirs _
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 32
+      def test_list_files_ignore_git_and_github_dirs(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:32
+________ ERROR at setup of TestRepoStructure.test_get_repo_path_success ________
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 43
+      def test_get_repo_path_success(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:43
+________ ERROR at setup of TestRepoStructure.test_get_repo_path_failure ________
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 48
+      def test_get_repo_path_failure(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:48
+_____ ERROR at setup of TestRepoStructure.test_list_files_depth_limitation _____
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 54
+      def test_list_files_depth_limitation(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:54
+___ ERROR at setup of TestRepoStructure.test_list_files_extension_filtering ____
+file /home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py, line 65
+      def test_list_files_extension_filtering(self, mocker):
+E       fixture 'mocker' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, cov, doctest_namespace, monkeypatch, no_cover, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, setup_class, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+/home/runner/work/testGeneration/testGeneration/generated_tests/python/test_structure.py:65
+=================================== FAILURES ===================================
+________________ TestRepoStructure.test_list_files_normal_case _________________
+
+self = <test_structure.TestRepoStructure object at 0x7f63c09ccc70>
+
+    def test_list_files_normal_case(self):
+        """Test list_files method returns correct file structure"""
+        # Setup a temporary directory structure
+        with pytest.raises(FileNotFoundError):
+>           self.repo_structure.list_files()
+E           Failed: DID NOT RAISE <class 'FileNotFoundError'>
+
+generated_tests/python/test_structure.py:20: Failed
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                       Stmts   Miss  Cover   Missing
+------------------------------------------------------------------------
+calculator.py                                 14     14     0%   3-20
+generate_tests.py                            366    366     0%   1-614
+generated_tests/python/test_structure.py      44     19    57%   24-30, 34-41, 45-46, 50-52, 56-63, 67-71
+structure.py                                  52     28    46%   30-35, 43, 47, 59-86
+test_calc2.py                                 30     30     0%   1-71
+------------------------------------------------------------------------
+TOTAL                                        506    457    10%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_structure.py::TestRepoStructure::test_list_files_normal_case - Failed: DID NOT RAISE <class 'FileNotFoundError'>
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_list_files_with_mocked_os_walk
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_list_files_ignore_git_and_github_dirs
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_get_repo_path_success
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_get_repo_path_failure
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_list_files_depth_limitation
+ERROR generated_tests/python/test_structure.py::TestRepoStructure::test_list_files_extension_filtering
+==================== 1 failed, 1 passed, 6 errors in 0.12s =====================
