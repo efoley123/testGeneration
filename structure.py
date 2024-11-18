@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 
+#class
 class RepoStructure:
     def __init__(self):
         current_path = os.path.dirname(os.path.abspath(__file__))
