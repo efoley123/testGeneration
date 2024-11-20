@@ -1,0 +1,75 @@
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 0 items
+
+============================ no tests ran in 0.01s =============================
+============================= test session starts ==============================
+platform linux -- Python 3.8.18, pytest-8.3.3, pluggy-1.5.0
+rootdir: /home/runner/work/testGeneration/testGeneration
+plugins: cov-5.0.0
+collected 14 items
+
+generated_tests/python/test_calculator.py ............FF                 [100%]
+
+=================================== FAILURES ===================================
+_ test_calculator_failure_scenarios[10-0-Error: Division by zero is not allowed.] _
+
+a = 10, b = 0
+expected_error_message = 'Error: Division by zero is not allowed.'
+
+    @pytest.mark.parametrize("a, b, expected_error_message", [
+        (10, 0, "Error: Division by zero is not allowed."),
+        (10, 5, "Error: Invalid operation."),
+    ])
+    def test_calculator_failure_scenarios(a, b, expected_error_message):
+        """
+        Test failure scenarios for the calculator function.
+        """
+        for operation in ['/', '%']:
+>           assert calculator(a, b, operation) == expected_error_message
+E           AssertionError: assert 'Error: Invalid operation.' == 'Error: Divis... not allowed.'
+E             
+E             - Error: Division by zero is not allowed.
+E             + Error: Invalid operation.
+
+generated_tests/python/test_calculator.py:46: AssertionError
+______ test_calculator_failure_scenarios[10-5-Error: Invalid operation.] _______
+
+a = 10, b = 5, expected_error_message = 'Error: Invalid operation.'
+
+    @pytest.mark.parametrize("a, b, expected_error_message", [
+        (10, 0, "Error: Division by zero is not allowed."),
+        (10, 5, "Error: Invalid operation."),
+    ])
+    def test_calculator_failure_scenarios(a, b, expected_error_message):
+        """
+        Test failure scenarios for the calculator function.
+        """
+        for operation in ['/', '%']:
+>           assert calculator(a, b, operation) == expected_error_message
+E           AssertionError: assert 2.0 == 'Error: Invalid operation.'
+E            +  where 2.0 = calculator(10, 5, '/')
+
+generated_tests/python/test_calculator.py:46: AssertionError
+
+---------- coverage: platform linux, python 3.8.18-final-0 -----------
+Name                                        Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------------
+calculator.py                                  14      0   100%
+generate_tests.py                             288    288     0%   1-487
+generated_tests/python/test_calculator.py      16      0   100%
+structure.py                                   38     38     0%   1-66
+test_calc2.py                                  30     30     0%   1-71
+-------------------------------------------------------------------------
+TOTAL                                         386    356     8%
+
+=========================== short test summary info ============================
+FAILED generated_tests/python/test_calculator.py::test_calculator_failure_scenarios[10-0-Error: Division by zero is not allowed.] - AssertionError: assert 'Error: Invalid operation.' == 'Error: Divis... not allowed.'
+  
+  - Error: Division by zero is not allowed.
+  + Error: Invalid operation.
+FAILED generated_tests/python/test_calculator.py::test_calculator_failure_scenarios[10-5-Error: Invalid operation.] - AssertionError: assert 2.0 == 'Error: Invalid operation.'
+ +  where 2.0 = calculator(10, 5, '/')
+========================= 2 failed, 12 passed in 0.11s =========================
